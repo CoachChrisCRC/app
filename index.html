@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach Chris CRC</title>
+    <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#121412">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Inline PWA Manifest -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Coach Chris CRC","short_name":"CoachChris","start_url":"./index.html","display":"standalone","background_color":"#121412","theme_color":"#121412","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/3034/3034875.png","sizes":"512x512","type":"image/png"}]}'>
+    <meta name="apple-mobile-web-app-title" content="Coach Chris">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        :root { --olive: #808a5c; --bg: #121412; }
+        :root { --olive: #808a5c; --bg: #121412; --launch-overlay: rgba(18, 20, 18, 0.95); }
         
         body { 
             font-family: 'Inter', sans-serif; 
@@ -81,9 +81,50 @@
             border-color: rgba(0, 0, 0, 0);
             border-width: 4px;
         }
+
+        /* Launch Overlay Styles */
+        #launch-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: var(--launch-overlay);
+            backdrop-filter: blur(12px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #launch-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #launch-icon-container {
+            color: var(--olive);
+            animation: pulse-scale 1.2s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes pulse-scale {
+            0% { transform: scale(0.85); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.85); opacity: 0.3; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Minimal Loading Overlay -->
+    <div id="launch-overlay">
+        <div id="launch-icon-container">
+            <i data-lucide="zap" class="w-16 h-16"></i>
+        </div>
+    </div>
 
     <div class="flex flex-col items-center text-center p-8 w-full max-sm:max-w-xs">
         
@@ -128,43 +169,102 @@
     </div>
 
     <script>
-        // --- PWA INTEGRATION ---
+        lucide.createIcons();
+
+        // --- PWA Support & Custom Configuration ---
+        const PWA_CONFIG = {
+            name: "Coach Chris CRC",
+            shortName: "Coach Chris",
+            iconUrl: "icon-512.png" 
+        };
+
+        // 1. Generate Manifest dynamically
+        const manifest = {
+            "name": PWA_CONFIG.name,
+            "short_name": PWA_CONFIG.shortName,
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#121412",
+            "theme_color": "#808a5c",
+            "description": "Coach Chris CRC Performance Dashboard",
+            "icons": [
+                {
+                    "src": PWA_CONFIG.iconUrl,
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                }
+            ]
+        };
+        
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        
+        const manifestTag = document.createElement('link');
+        manifestTag.rel = 'manifest';
+        manifestTag.href = manifestURL;
+        document.head.appendChild(manifestTag);
+
+        const appleIconTag = document.createElement('link');
+        appleIconTag.rel = 'apple-touch-icon';
+        appleIconTag.href = PWA_CONFIG.iconUrl;
+        document.head.appendChild(appleIconTag);
+
+        // 2. Register Service Worker
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => self.skipWaiting());
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+                });
+            `;
+            const swBlob = new Blob([swCode], {type: 'text/javascript'});
+            const swUrl = URL.createObjectURL(swBlob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log("SW Error", err));
+        }
+
+        // PWA Installation UI Logic
         let deferredPrompt;
         const installBtn = document.getElementById('install-btn');
+        const skipBtn = document.getElementById('skip-btn');
+        const launchOverlay = document.getElementById('launch-overlay');
 
         window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
             e.preventDefault();
+            // Stash the event so it can be triggered later.
             deferredPrompt = e;
+            // Update UI to notify the user they can add to home screen
             installBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             installBtn.style.opacity = '1';
         });
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
+                // Show the browser's native add to home screen / install prompt
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
+                console.log('User response to install prompt:', outcome);
                 deferredPrompt = null;
                 installBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                // Fallback for iOS or browsers where prompt isn't supported/fired yet
+                // Most browsers will show their manual 'Add to Home Screen' if the user uses the menu
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    alert("To install: tap the 'Share' icon and select 'Add to Home Screen'.");
+                }
             }
         });
 
-        // Inline Service Worker Generation
-        if ('serviceWorker' in navigator) {
-            const swCode = `
-                const CACHE_NAME = 'coach-chris-v1';
-                self.addEventListener('install', (e) => {
-                    e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', 'https://cdn.tailwindcss.com'])));
-                });
-                self.addEventListener('fetch', (e) => {
-                    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-                });
-            `;
-            const blob = new Blob([swCode], { type: 'text/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).catch(console.error);
-        }
+        // Continue Logic with Launch Overlay
+        skipBtn.addEventListener('click', () => {
+            launchOverlay.classList.add('active');
+            setTimeout(() => { window.location.replace("https://coachchriscrc.carrd.co"); }, 1200);
+        });
 
-        // --- ORIGINAL SITE LOGIC ---
+        // Theme & UI Logic
         const qrContainer = document.getElementById("qrcode");
         new QRCode(qrContainer, {
             text: window.location.href,
@@ -175,7 +275,6 @@
             correctLevel : QRCode.CorrectLevel.H
         });
 
-        const targetUrl = "https://coachchriscrc.carrd.co";
         const progressBar = document.getElementById('progress-bar');
         const statusText = document.getElementById('status-text');
         const loaderUi = document.getElementById('loader-ui');
@@ -183,7 +282,6 @@
         const mainIcon = document.getElementById('main-icon');
         const iconContainer = document.getElementById('icon-container');
         const subLabel = document.getElementById('sub-label');
-        const skipBtn = document.getElementById('skip-btn');
 
         let width = 0;
         const progressIncrement = 12.0; 
@@ -209,8 +307,6 @@
                 dashboardUi.classList.add('slide-up');
             }, 50);
         }
-
-        skipBtn.addEventListener('click', () => window.location.replace(targetUrl));
 
         function simulateProgress() {
             width += Math.random() * progressIncrement;
