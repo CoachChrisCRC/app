@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Chris CRC | Loading...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            /* Olive Green Palette */
+            --olive-primary: #808a5c;
+            --olive-dark: #556b2f;
+            --olive-light: #a3ad85;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121412; /* Deep charcoal with a hint of green */
+            color: #ffffff;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .fitness-gradient {
+            background: linear-gradient(135deg, var(--olive-primary) 0%, var(--olive-dark) 100%);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .8; transform: scale(0.98); }
+        }
+
+        .bar-container {
+            width: 280px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+            border: 1px solid rgba(128, 138, 92, 0.2);
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            transition: width 0.1s ease-out;
+        }
+
+        .glow {
+            box-shadow: 0 0 15px rgba(128, 138, 92, 0.5);
+        }
+
+        .icon-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(128, 138, 92, 0.05);
+            padding: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(128, 138, 92, 0.1);
+            width: 140px;
+            height: 140px;
+            overflow: hidden;
+        }
+
+        /* Left-to-Right Heartrate Animation */
+        .heartrate-path {
+            stroke-dasharray: 120;
+            stroke-dashoffset: 120;
+            animation: move-right 1.4s linear infinite;
+        }
+
+        @keyframes move-right {
+            0% { stroke-dashoffset: 120; }
+            100% { stroke-dashoffset: -120; }
+        }
+
+        .text-olive {
+            color: var(--olive-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex flex-col items-center text-center p-6">
+        <!-- Animated Heartrate Icon -->
+        <div class="icon-container mb-10">
+            <!-- Adjusted viewBox and Path for more vertical "height" and horizontal "length" -->
+            <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#808a5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Static faint background line with increased height/amplitude -->
+                <path d="M0 12h2l1.5-4 1.5 8 2-14 2.5 20 2-10 2 4h10.5" opacity="0.1"></path>
+                <!-- Animated foreground line with the same expanded dimensions -->
+                <path d="M0 12h2l1.5-4 1.5 8 2-14 2.5 20 2-10 2 4h10.5" class="heartrate-path"></path>
+            </svg>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-2">
+            Coach Chris <span class="text-olive">CRC</span>
+        </h1>
+        
+        <div class="flex items-center space-x-2">
+            <span class="h-[1px] w-4 bg-[#808a5c]"></span>
+            <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em] font-bold">FITTER. STRONGER. BETTER.</p>
+            <span class="h-[1px] w-4 bg-[#808a5c]"></span>
+        </div>
+
+        <!-- Loading Progress -->
+        <div class="bar-container">
+            <div id="progress-bar" class="fitness-gradient glow"></div>
+        </div>
+        
+        <div id="status-text" class="text-[10px] text-gray-500 mt-6 font-mono uppercase tracking-widest opacity-70">
+            Scanning Vitals... 0%
+        </div>
+    </div>
+
+    <script>
+        const targetUrl = "https://coachchriscrc.carrd.co";
+        const progressBar = document.getElementById('progress-bar');
+        const statusText = document.getElementById('status-text');
+        
+        const phases = [
+            "Optimizing Vitals",
+            "Loading Protocol",
+            "Calibrating Strength",
+            "Final Adjustment",
+            "Deployment Ready"
+        ];
+
+        let width = 0;
+        
+        function updateProgress() {
+            const increment = Math.random() * 4.5; 
+            width += increment;
+
+            if (width >= 100) {
+                width = 100;
+                progressBar.style.width = width + '%';
+                statusText.innerText = "Execute";
+                statusText.style.color = "#808a5c";
+                
+                setTimeout(() => {
+                    window.location.replace(targetUrl);
+                }, 400); 
+            } else {
+                progressBar.style.width = width + '%';
+                
+                const phaseIndex = Math.floor((width / 100) * phases.length);
+                statusText.innerText = `${phases[phaseIndex]} // ${Math.floor(width)}%`;
+                
+                setTimeout(() => {
+                    requestAnimationFrame(updateProgress);
+                }, 30); 
+            }
+        }
+
+        window.onload = () => {
+            setTimeout(() => {
+                requestAnimationFrame(updateProgress);
+            }, 600);
+        };
+    </script>
+</body>
+</html>
+
