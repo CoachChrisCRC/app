@@ -74,11 +74,10 @@
             transition: color 0.1s linear;
         }
 
-        /* Icon Container with thicker, darker transitionable border */
         #icon-container {
             transition: border-color 0.1s linear;
             border-color: rgba(0, 0, 0, 0);
-            border-width: 4px; /* Thicker border */
+            border-width: 4px;
         }
     </style>
 </head>
@@ -127,43 +126,36 @@
     </div>
 
     <script>
-        // PWA Installation Logic
         let deferredPrompt;
         const installBtn = document.getElementById('install-btn');
 
+        // Listen for the install prompt event
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
             e.preventDefault();
-            // Stash the event so it can be triggered later.
             deferredPrompt = e;
-            // Update UI to notify the user they can add to home screen
+            // Enable button
             installBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             installBtn.style.opacity = '1';
         });
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
-                // Show the prompt
                 deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                } else {
-                    console.log('User dismissed the install prompt');
+                    console.log('User accepted install');
                 }
                 deferredPrompt = null;
-                // Optionally hide the button again
                 installBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         });
 
-        // Service Worker Registration
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registered', reg))
-                    .catch(err => console.log('Service Worker registration failed', err));
+                    .then(reg => console.log('SW Registered'))
+                    .catch(err => console.error('SW Registration failed', err));
             });
         }
 
@@ -193,13 +185,9 @@
         function updateTheme(p) {
             const bgVal = Math.floor(18 + (237 * p)); 
             const textVal = Math.floor(255 - (255 * p)); 
-            
             document.body.style.backgroundColor = `rgb(${bgVal}, ${bgVal}, ${bgVal})`;
             document.body.style.color = `rgb(${textVal}, ${textVal}, ${textVal})`;
-            
-            // Transition icon container border from transparent to pure black (p=1 -> alpha 1.0)
             iconContainer.style.borderColor = `rgba(0, 0, 0, ${p})`;
-            
             const zincShade = Math.floor(113 + (50 * p)); 
             subLabel.style.color = `rgb(${zincShade - (zincShade * p)}, ${zincShade - (zincShade * p)}, ${zincShade - (zincShade * p)})`;
         }
