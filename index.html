@@ -36,7 +36,6 @@
             align-items: center; 
             justify-content: center; 
             min-height: 100svh; 
-            perspective: 1000px;
             transition: background-color 0.1s linear, color 0.1s linear;
         }
 
@@ -108,51 +107,48 @@
         }
         @keyframes move-right { 0% { stroke-dashoffset: 120; } 100% { stroke-dashoffset: -120; } }
 
-        /* Swipe Hint Animation */
-        #swipe-hint {
-            position: fixed;
-            bottom: 12%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            flex-direction: column;
+        /* Swipe Button Styles */
+        .swipe-track {
+            position: relative;
+            width: 240px;
+            height: 60px;
+            background: #f4f4f5;
+            border-radius: 99px;
+            display: flex;
             align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid #e4e4e7;
+        }
+
+        .swipe-handle {
+            position: absolute;
+            left: 4px;
+            width: 52px;
+            height: 52px;
+            background: #808a5c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: grab;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(128, 138, 92, 0.3);
+            touch-action: none;
+        }
+
+        .swipe-text {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #a1a1aa;
             pointer-events: none;
-            z-index: 8000;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            user-select: none;
         }
 
-        .swipe-hand {
-            animation: swipe-move 2s ease-in-out infinite;
-        }
-
-        @keyframes swipe-move {
-            0% { transform: translateX(40px) translateY(0); opacity: 0; }
-            20% { opacity: 1; }
-            80% { transform: translateX(-40px) translateY(-10px); opacity: 1; }
-            100% { transform: translateX(-50px) translateY(-15px); opacity: 0; }
-        }
-
-        /* Card Perspective Animation */
-        #main-card {
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-style: preserve-3d;
-        }
-
-        .peek-animation {
-            animation: peek 2.5s ease-in-out;
-        }
-
-        @keyframes peek {
-            0% { transform: rotateY(0deg); }
-            20% { transform: rotateY(-15deg) rotateX(5deg); }
-            40% { transform: rotateY(15deg) rotateX(-5deg); }
-            60% { transform: rotateY(-10deg); }
-            100% { transform: rotateY(0deg); }
-        }
-
-        /* QR Code Centering */
+        /* QR Code Styles */
         #qrcode-wrapper {
             position: relative;
             display: inline-block;
@@ -192,42 +188,6 @@
             object-fit: cover;
         }
 
-        /* Inconspicuous Top Install Banner Style */
-        #install-banner {
-            display: none;
-            position: fixed;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 6px;
-            border-radius: 99px;
-            z-index: 9000;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            animation: slideDownIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        @keyframes slideDownIn {
-            from { transform: translate(-50%, -20px); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
-
-        #install-action-btn {
-            background: #808a5c;
-            color: white;
-            padding: 5px 14px;
-            border-radius: 99px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
         /* Modal Styles */
         #qr-modal {
             display: none;
@@ -264,7 +224,6 @@
             transform: scale(1);
         }
 
-        /* Avatar Container Styling */
         .avatar-ring {
             position: relative;
             padding: 4px;
@@ -276,19 +235,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Inconspicuous Top Install Button -->
-    <div id="install-banner">
-        <button id="install-action-btn">Install</button>
-    </div>
-
-    <!-- Swipe Hint Overlay -->
-    <div id="swipe-hint">
-        <div class="swipe-hand mb-2">
-            <i data-lucide="hand" class="w-10 h-10 text-zinc-400/50"></i>
-        </div>
-        <span class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">Swipe to Explore</span>
-    </div>
 
     <!-- Splash Screen -->
     <div id="splash-screen">
@@ -308,114 +254,81 @@
     <!-- QR Modal -->
     <div id="qr-modal">
         <div class="modal-content text-center">
-            <!-- Signature above QR -->
             <h2 class="rock-salt font-bold text-lg text-zinc-800 uppercase tracking-tight mb-6">COACH CHRIS</h2>
-
             <div id="qrcode-wrapper" class="mb-6">
                 <div id="qrcode"></div>
                 <div class="qr-logo-overlay">
                     <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Logo">
                 </div>
             </div>
-            
-            <!-- Mirroring Main Page Text -->
             <div class="flex flex-col items-center mb-6">
                 <h3 class="text-black font-[900] text-xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
                 <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-3">Online Coach & PT</p>
-                
                 <div class="flex flex-col gap-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-3 italic">
                     <span>Circular Roots Coaching</span>
                     <span>TRAIN UNCNVNTNL</span>
                 </div>
-                
-                <p class="text-[#808a5c] text-[10px] font-[900] uppercase tracking-[0.2em] mb-4">
-                    #FITTER #STRONGER #BETTER
-                </p>
-
-                <p class="text-zinc-400 text-[9px] font-bold uppercase tracking-[0.15em]">
-                    Scan QR Code to connect
-                </p>
+                <p class="text-[#808a5c] text-[10px] font-[900] uppercase tracking-[0.2em] mb-4">#FITTER #STRONGER #BETTER</p>
+                <p class="text-zinc-400 text-[9px] font-bold uppercase tracking-[0.15em]">Scan QR Code to connect</p>
             </div>
-
-            <button id="close-qr" class="w-full bg-zinc-100 text-zinc-600 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform">
-                Dismiss
-            </button>
+            <button id="close-qr" class="w-full bg-zinc-100 text-zinc-600 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform">Dismiss</button>
         </div>
     </div>
 
-    <!-- Main Content Wrapped in Animated Card Container -->
+    <!-- Main Content -->
     <div id="main-card" class="flex flex-col items-center text-center p-6 w-full max-sm:max-w-xs py-10">
-        <!-- Avatar & Profile Section -->
         <div id="profile-header" class="mb-6 opacity-0 transition-all duration-700 -translate-y-4">
             <div class="flex flex-col items-center">
                 <div class="avatar-ring mb-8">
                     <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Coach Chris" class="w-40 h-40 rounded-full object-cover">
                 </div>
-                
                 <h2 class="rock-salt font-bold text-2xl text-zinc-800 uppercase tracking-tight mb-4">COACH CHRIS</h2>
                 <h3 class="text-black font-[900] text-3xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
                 <p class="text-zinc-500 text-[12px] font-bold uppercase tracking-widest mb-4">Online Coach & PT</p>
-                
                 <div class="flex flex-col gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-5 italic">
                     <span>Circular Roots Coaching</span>
                     <span>TRAIN UNCNVNTNL</span>
                 </div>
-                
-                <p class="text-[#808a5c] text-[11px] font-[900] uppercase tracking-[0.25em]">
-                    #FITTER #STRONGER #BETTER
-                </p>
+                <p class="text-[#808a5c] text-[11px] font-[900] uppercase tracking-[0.25em]">#FITTER #STRONGER #BETTER</p>
             </div>
         </div>
 
-        <!-- Dashboard UI -->
-        <div id="dashboard-ui" class="flex w-full flex-col items-center opacity-0 transform translate-y-4 transition-all duration-700 space-y-4">
+        <div id="dashboard-ui" class="flex w-full flex-col items-center opacity-0 transform translate-y-4 transition-all duration-700 space-y-10">
             <!-- QR Button Area -->
-            <div class="flex justify-center w-full mb-2">
-                <button id="open-qr" class="w-1/4 bg-zinc-100 text-zinc-800 p-5 rounded-2xl flex items-center justify-center hover:bg-zinc-200 active:scale-95 transition-all">
-                    <i data-lucide="qr-code" class="w-6 h-6"></i>
-                </button>
+            <button id="open-qr" class="bg-zinc-100 text-zinc-800 p-5 rounded-2xl flex items-center justify-center hover:bg-zinc-200 active:scale-95 transition-all">
+                <i data-lucide="qr-code" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Swipe Button Area -->
+            <div class="swipe-track">
+                <div class="swipe-handle" id="swipe-handle">
+                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                </div>
+                <span class="swipe-text">Swipe to Explore</span>
             </div>
         </div>
     </div>
 
     <script>
         const EXTERNAL_URL = "https://coachchriscrc.carrd.co";
-
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
-
         const splash = document.getElementById('splash-screen');
         const profileHeader = document.getElementById('profile-header');
         const ui = document.getElementById('dashboard-ui');
         const mainCard = document.getElementById('main-card');
-        const installBanner = document.getElementById('install-banner');
-        const installActionBtn = document.getElementById('install-action-btn');
         const qrModal = document.getElementById('qr-modal');
         const openQrBtn = document.getElementById('open-qr');
         const closeQrBtn = document.getElementById('close-qr');
-        const swipeHint = document.getElementById('swipe-hint');
+        const handle = document.getElementById('swipe-handle');
 
         function revealDashboard() {
             splash.classList.add('fade-out');
             setTimeout(() => {
                 profileHeader.classList.remove('opacity-0', '-translate-y-4');
                 ui.classList.remove('opacity-0', 'translate-y-4');
-                
-                // Play card peek animation
-                setTimeout(() => {
-                    mainCard.classList.add('peek-animation');
-                }, 1000);
-
-                // Show swipe hint after reveal
-                setTimeout(() => {
-                    swipeHint.style.display = 'flex';
-                    setTimeout(() => { swipeHint.style.opacity = '1'; }, 100);
-                }, 2200);
             }, 200);
         }
 
-        window.addEventListener('load', () => {
-            setTimeout(revealDashboard, 1000);
-        });
+        window.addEventListener('load', () => setTimeout(revealDashboard, 1000));
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -434,89 +347,60 @@
             });
         }
 
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (!isStandalone) {
-                installBanner.style.display = 'flex';
-            }
-        });
+        // Swipe Button Logic
+        let isDragging = false;
+        let startX = 0;
+        const maxDelta = 240 - 52 - 8; // trackWidth - handleWidth - padding
 
-        installActionBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    installBanner.style.display = 'none';
-                }
-                deferredPrompt = null;
-            }
-        });
+        function onStart(e) {
+            isDragging = true;
+            startX = (e.type === 'touchstart') ? e.touches[0].clientX : e.clientX;
+            handle.style.transition = 'none';
+        }
 
-        window.addEventListener('appinstalled', () => {
-            installBanner.style.display = 'none';
-        });
+        function onMove(e) {
+            if (!isDragging) return;
+            const currentX = (e.type === 'touchmove') ? e.touches[0].clientX : e.clientX;
+            let delta = currentX - startX;
+            delta = Math.max(0, Math.min(delta, maxDelta));
+            handle.style.transform = `translateX(${delta}px)`;
+            
+            // Apply slight opacity fade as we swipe
+            handle.parentElement.querySelector('.swipe-text').style.opacity = 1 - (delta / maxDelta);
+        }
+
+        function onEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            const currentTransform = new WebKitCSSMatrix(window.getComputedStyle(handle).transform).m41;
+            
+            if (currentTransform >= maxDelta * 0.9) {
+                // Success - trigger redirect
+                handle.style.transition = 'transform 0.2s ease-out';
+                handle.style.transform = `translateX(${maxDelta}px)`;
+                setTimeout(() => window.location.href = EXTERNAL_URL, 150);
+            } else {
+                // Fail - snap back
+                handle.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                handle.style.transform = `translateX(0px)`;
+                handle.parentElement.querySelector('.swipe-text').style.opacity = 1;
+            }
+        }
+
+        handle.addEventListener('mousedown', onStart);
+        handle.addEventListener('touchstart', onStart, { passive: true });
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchend', onEnd);
 
         // UI Logic
         lucide.createIcons();
+        openQrBtn.addEventListener('click', () => qrModal.classList.add('active'));
+        closeQrBtn.addEventListener('click', () => qrModal.classList.remove('active'));
+        qrModal.addEventListener('click', (e) => { if(e.target === qrModal) qrModal.classList.remove('active'); });
 
-        function hideSwipeHint() {
-            swipeHint.style.opacity = '0';
-            setTimeout(() => { swipeHint.style.display = 'none'; }, 500);
-        }
-
-        openQrBtn.addEventListener('click', () => {
-            qrModal.classList.add('active');
-            mainCard.classList.remove('peek-animation');
-            hideSwipeHint();
-        });
-
-        closeQrBtn.addEventListener('click', () => {
-            qrModal.classList.remove('active');
-        });
-
-        qrModal.addEventListener('click', (e) => {
-            if(e.target === qrModal) qrModal.classList.remove('active');
-        });
-
-        // Horizontal Swipe Gesture Detection for External Link
-        let touchstartX = 0;
-        let touchstartY = 0;
-        let touchendX = 0;
-        let touchendY = 0;
-
-        function handleGesture() {
-            const deltaX = touchendX - touchstartX;
-            const deltaY = touchendY - touchstartY;
-            
-            // Check if horizontal movement is significant and much larger than vertical movement
-            // This ensures it only triggers for left/right swipes
-            const minHorizontalSwipe = 80;
-            const maxVerticalDeviance = 50;
-
-            if (Math.abs(deltaX) > minHorizontalSwipe && Math.abs(deltaY) < maxVerticalDeviance) {
-                // If not viewing QR modal, open the external link
-                if (!qrModal.classList.contains('active')) {
-                    window.location.href = EXTERNAL_URL;
-                    hideSwipeHint();
-                }
-            }
-        }
-
-        document.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-            touchstartY = e.changedTouches[0].screenY;
-        }, { passive: true });
-
-        document.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            touchendY = e.changedTouches[0].screenY;
-            handleGesture();
-        }, { passive: true });
-
-        const qrContainer = document.getElementById("qrcode");
-        new QRCode(qrContainer, {
+        new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
             width: 240,
             height: 240,
