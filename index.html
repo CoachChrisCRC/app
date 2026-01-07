@@ -30,12 +30,12 @@
             font-family: 'Inter', sans-serif; 
             background-color: #ffffff; 
             color: #000; 
-            overflow: hidden; 
+            overflow-y: auto; 
             margin: 0; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            height: 100vh; 
+            min-height: 100svh; 
             transition: background-color 0.1s linear, color 0.1s linear;
         }
 
@@ -90,18 +90,18 @@
 </head>
 <body>
 
-    <div class="flex flex-col items-center text-center p-8 w-full max-sm:max-w-xs">
-        <div id="main-icon" class="mb-12 transition-all duration-1000 scale-[0.7] -translate-y-[20px] opacity-50">
-            <div id="icon-container" class="relative flex items-center justify-center bg-zinc-400/10 rounded-full w-32 h-32 border shadow-[0_0_40px_rgba(128,138,92,0.1)]">
-                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#808a5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <div class="flex flex-col items-center text-center p-6 w-full max-sm:max-w-xs py-10">
+        <div id="main-icon" class="mb-8 transition-all duration-1000 scale-[0.7] -translate-y-[20px] opacity-50">
+            <div id="icon-container" class="relative flex items-center justify-center bg-zinc-400/10 rounded-full w-28 h-28 border shadow-[0_0_40px_rgba(128,138,92,0.1)]">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#808a5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M0 12h2l1.5-4 1.5 8 2-14 2.5 20 2-10 2 4h10.5" opacity="0.1"></path>
                     <path d="M0 12h2l1.5-4 1.5 8 2-14 2.5 20 2-10 2 4h10.5" class="heartrate-path"></path>
                 </svg>
             </div>
         </div>
 
-        <div id="branding" class="mb-8">
-            <h1 class="text-4xl font-black uppercase tracking-tighter mb-2">
+        <div id="branding" class="mb-6">
+            <h1 class="text-3xl font-black uppercase tracking-tighter mb-2">
                 Coach Chris <span class="text-[#808a5c]">CRC</span>
             </h1>
             <p id="sub-label" class="text-black text-[9px] uppercase tracking-[0.4em] font-bold">FITTER. STRONGER. BETTER.</p>
