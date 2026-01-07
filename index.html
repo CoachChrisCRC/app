@@ -362,6 +362,14 @@
             }, 200);
         }
 
+        // Ensure transition screen is removed if user navigates back
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                transitionScreen.classList.remove('active');
+                resetSwipe();
+            }
+        });
+
         window.addEventListener('load', () => setTimeout(revealDashboard, 1000));
 
         if ('serviceWorker' in navigator) {
@@ -429,9 +437,6 @@
                 setTimeout(() => {
                     window.location.href = EXTERNAL_URL;
                 }, 300);
-                
-                // Reset position in background
-                setTimeout(resetSwipe, 1000);
             } else {
                 resetSwipe();
             }
