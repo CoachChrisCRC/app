@@ -10,13 +10,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Coach Chris">
+    <meta name="apple-mobile-web-app-title" content="CoachChrisCRC Business Card">
     
     <!-- App Icons -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png">
     
     <!-- Robust Manifest Data URI -->
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Coach%20Chris%20CRC%22,%22short_name%22:%22CoachChris%22,%22description%22:%22Professional%20Training%20Hub%20by%20Coach%20Chris%22,%22start_url%22:%22./%22,%22scope%22:%22./%22,%22display%22:%22standalone%22,%22orientation%22:%22portrait%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22,%22purpose%22:%22any%20maskable%22}]} " />
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22CoachChrisCRC%20Business%20Card%22,%22short_name%22:%22CoachChrisCRC%22,%22description%22:%22Professional%20Training%20Hub%20by%20Coach%20Chris%22,%22start_url%22:%22./%22,%22scope%22:%22./%22,%22display%22:%22standalone%22,%22orientation%22:%22portrait%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22,%22purpose%22:%22any%20maskable%22}]} " />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -96,38 +96,38 @@
 
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: .7; transform: scale(0.97); }
+            50% { opacity: .8; transform: scale(0.98); }
         }
 
-        .loader-bar {
-            width: 140px;
-            height: 2px;
-            background: rgba(128, 138, 92, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
+        /* Heartbeat Loading Animation */
+        .ekg-container {
+            width: 180px;
+            height: 40px;
             margin-top: 24px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .loader-progress {
+        .ekg-svg {
             width: 100%;
             height: 100%;
-            background: #808a5c;
-            transform-origin: left;
-            animation: load 1s ease-in-out infinite;
         }
 
-        @keyframes load {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .ekg-path {
+            stroke: #808a5c;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 500;
+            stroke-dashoffset: 500;
+            animation: ekg-draw 2s linear infinite;
         }
 
-        /* Heartrate Path Animation */
-        .heartrate-path {
-            stroke-dasharray: 120;
-            stroke-dashoffset: 120;
-            animation: move-right 1.4s linear infinite;
+        @keyframes ekg-draw {
+            0% { stroke-dashoffset: 500; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0; }
         }
-        @keyframes move-right { 0% { stroke-dashoffset: 120; } 100% { stroke-dashoffset: -120; } }
 
         /* Swipe Button Styles */
         .swipe-track {
@@ -283,15 +283,30 @@
 
     <!-- Splash Screen (Initial Load) -->
     <div id="splash-screen">
-        <div class="pulse-animation flex flex-col items-center">
-            <div class="relative flex items-center justify-center bg-zinc-800/30 rounded-full w-24 h-24 border border-[#808a5c]/30 mb-6">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#808a5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M0 12h2l1.5-4 1.5 8 2-14 2.5 20 2-10 2 4h10.5" class="heartrate-path"></path>
-                </svg>
+        <div class="pulse-animation flex flex-col items-center px-4">
+            <div class="flex items-center justify-center gap-3 sm:gap-6 mb-8">
+                <!-- Left Secondary Logo: UNCNVNTNL -->
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-white/5 p-1 flex items-center justify-center border border-white/10">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" alt="UNCNVNTNL Logo" class="w-full h-full object-contain">
+                </div>
+                
+                <!-- Center Profile Avatar -->
+                <div class="relative flex items-center justify-center bg-zinc-800/10 rounded-full w-28 h-28 sm:w-36 sm:h-36 border-2 border-[#808a5c]/30 overflow-hidden shadow-2xl">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Coach Chris" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Right Secondary Logo: CRC -->
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-white/5 p-1 flex items-center justify-center border border-white/10">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" alt="CRC Logo" class="w-full h-full object-contain">
+                </div>
             </div>
-            <h1 class="text-white text-xl font-black uppercase tracking-[0.2em]">Coach Chris <span class="text-[#808a5c]">CRC</span></h1>
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
+
+            <h1 class="text-white text-xl font-black uppercase tracking-[0.2em] text-center">Coach Chris <span class="text-[#808a5c]">CRC</span></h1>
+            
+            <div class="ekg-container">
+                <svg class="ekg-svg" viewBox="0 0 180 40">
+                    <path class="ekg-path" d="M0,20 L40,20 L45,10 L55,30 L60,20 L90,20 L95,0 L105,40 L110,20 L180,20"></path>
+                </svg>
             </div>
         </div>
     </div>
@@ -299,8 +314,10 @@
     <!-- Transition Screen (Solid White, No Icon) -->
     <div id="transition-screen">
         <div class="flex flex-col items-center">
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
+            <div class="ekg-container">
+                <svg class="ekg-svg" viewBox="0 0 180 40">
+                    <path class="ekg-path" d="M0,20 L40,20 L45,10 L55,30 L60,20 L90,20 L95,0 L105,40 L110,20 L180,20"></path>
+                </svg>
             </div>
         </div>
     </div>
@@ -318,7 +335,7 @@
     <!-- QR Modal -->
     <div id="qr-modal">
         <div class="modal-content text-center">
-            <h2 class="rock-salt font-bold text-lg text-zinc-800 uppercase tracking-tight mb-6">COACH CHRIS</h2>
+            <h2 class="rock-salt font-bold text-xl text-zinc-800 uppercase tracking-tight mb-6">COACH CHRIS</h2>
             <div id="qrcode-wrapper" class="mb-6">
                 <div id="qrcode"></div>
                 <div class="qr-logo-overlay">
@@ -326,7 +343,7 @@
                 </div>
             </div>
             <div class="flex flex-col items-center mb-6">
-                <h3 class="text-black font-[900] text-xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
+                <h3 class="text-black font-[900] text-lg uppercase tracking-tighter mb-1">Chris Hedley</h3>
                 <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-3">Online Coach & PT</p>
                 <div class="flex flex-col gap-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-3 italic">
                     <span>Circular Roots Coaching</span>
@@ -347,8 +364,8 @@
                 <div class="avatar-ring mb-8">
                     <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Coach Chris" class="w-40 h-40 rounded-full object-cover">
                 </div>
-                <h2 class="rock-salt font-bold text-2xl text-zinc-800 uppercase tracking-tight mb-4">COACH CHRIS</h2>
-                <h3 class="text-black font-[900] text-3xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
+                <h2 class="rock-salt font-bold text-3xl text-zinc-800 uppercase tracking-tight mb-4">COACH CHRIS</h2>
+                <h3 class="text-black font-[900] text-2xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
                 <p class="text-zinc-500 text-[12px] font-bold uppercase tracking-widest mb-4">Online Coach & PT</p>
                 <div class="flex flex-col gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-5 italic">
                     <span>Circular Roots Coaching</span>
@@ -434,7 +451,7 @@
             }
         });
 
-        window.addEventListener('load', () => setTimeout(revealDashboard, 1000));
+        window.addEventListener('load', () => setTimeout(revealDashboard, 2000));
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
