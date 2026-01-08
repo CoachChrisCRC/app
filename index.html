@@ -6,17 +6,17 @@
     <title>Coach Chris CRC</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#fcfcfc">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="CoachChrisCRC Business Card">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CoachChrisCRC">
     
     <!-- App Icons -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png">
     
     <!-- Robust Manifest Data URI -->
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22CoachChrisCRC%20Business%20Card%22,%22short_name%22:%22CoachChrisCRC%22,%22description%22:%22Professional%20Training%20Hub%20by%20Coach%20Chris%22,%22start_url%22:%22./%22,%22scope%22:%22./%22,%22display%22:%22standalone%22,%22orientation%22:%22portrait%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22,%22purpose%22:%22any%20maskable%22}]} " />
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22CoachChrisCRC%20Business%20Card%22,%22short_name%22:%22CoachChrisCRC%22,%22description%22:%22Professional%20Training%20Hub%20by%20Coach%20Chris%22,%22start_url%22:%22./%22,%22scope%22:%22./%22,%22display%22:%22standalone%22,%22orientation%22:%22portrait%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23ffffff%22,%22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22,%22purpose%22:%22any%20maskable%22}]} " />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -24,51 +24,41 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Rock+Salt&display=swap');
-        :root { --olive: #808a5c; --bg: #121412; }
+        :root { --olive: #808a5c; --bg: #f2f2f2; }
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #ffffff; 
+            background-color: var(--bg); 
+            background-image: radial-gradient(circle at 50% 50%, #ffffff 0%, #f2f2f2 100%);
             color: #000; 
             overflow: hidden; 
             margin: 0; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            min-height: 100svh; 
-            transition: background-color 0.1s linear, color 0.1s linear;
+            min-height: 100svh;
         }
 
-        .rock-salt {
-            font-family: 'Rock Salt', cursive;
-        }
+        .rock-salt { font-family: 'Rock Salt', cursive; }
 
-        /* Splash Screen Styles */
+        /* Splash Screen */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #0a0a0a;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            transition: opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), 
-                        transform 0.6s cubic-bezier(0.65, 0, 0.35, 1),
-                        visibility 0.6s;
-            transform: scale(1);
+            transition: opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), visibility 0.6s;
         }
+        #splash-screen.fade-out { opacity: 0; visibility: hidden; }
 
-        #splash-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(1.05);
-        }
-
-        /* Transition Screen Styles */
+        /* Transition Screen */
         #transition-screen {
             position: fixed;
             top: 0;
@@ -84,476 +74,254 @@
             opacity: 0;
             transition: opacity 0.2s ease;
         }
+        #transition-screen.active { display: flex; opacity: 1; }
 
-        #transition-screen.active {
+        /* Distinctive Card Style */
+        .card-perspective {
+            perspective: 1500px;
+            width: 90%;
+            max-width: 380px;
+        }
+
+        .card-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 48px 24px 40px 24px;
+            box-shadow: 
+                0 40px 80px -20px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
-            opacity: 1;
-        }
-
-        /* Logo Carousel Animation - Sped Up to 2s */
-        .logo-carousel-container {
-            perspective: 1000px;
-            width: 120px;
-            height: 120px;
-            position: relative;
-        }
-
-        .logo-carousel-inner {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transform-style: preserve-3d;
-            animation: rotateCarousel 2s infinite linear;
-        }
-
-        .carousel-item {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            left: 10px;
-            top: 10px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #f4f4f5;
-            backface-visibility: visible;
+            text-align: center;
+            position: relative;
+            transform-style: preserve-3d;
         }
 
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-
-        /* Pulse base for transition screen - Sped Up to 0.8s */
-        .loading-pulse {
-            width: 40px;
-            height: 4px;
-            background: #808a5c;
-            border-radius: 99px;
-            margin-top: 60px;
+        .card-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #ffffff, #e2e2e2, #808a5c, #ffffff);
+            z-index: -1;
+            border-radius: 50px;
             opacity: 0.3;
-            animation: expandPulse 0.8s ease-in-out infinite;
         }
 
-        @keyframes expandPulse {
-            0%, 100% { transform: scaleX(1); opacity: 0.2; }
-            50% { transform: scaleX(2.5); opacity: 0.5; }
+        /* Avatar Styling */
+        .avatar-ring { 
+            position: relative; 
+            padding: 8px; 
+            background: white; 
+            border-radius: 50%; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 24px; 
+            perspective: 1000px;
         }
+        .avatar-flipper { width: 140px; height: 140px; position: relative; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .avatar-flipper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; position: absolute; backface-visibility: hidden; border: 4px solid #fff; }
 
-        /* Position the 3 items in a triangle in 3D space */
+        /* Swipe UI */
+        .swipe-track { 
+            position: relative; 
+            width: 100%; 
+            height: 72px; 
+            background: #ffffff; 
+            border-radius: 99px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .swipe-handle { 
+            position: absolute; 
+            left: 8px; 
+            width: 56px; 
+            height: 56px; 
+            background: var(--olive); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            cursor: grab; 
+            z-index: 2; 
+            box-shadow: 0 4px 15px rgba(128, 138, 92, 0.4); 
+            touch-action: none; 
+        }
+        .swipe-text { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: #a1a1aa; pointer-events: none; }
+
+        /* QR Overlay */
+        #qr-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 9500; align-items: center; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.3s ease; }
+        #qr-modal.active { display: flex; opacity: 1; }
+        .modal-content { background: white; border-radius: 40px; width: 100%; max-width: 380px; padding: 40px 24px; transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        #qr-modal.active .modal-content { transform: scale(1); }
+        
+        .qr-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: white; padding: 6px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .qr-logo-overlay img { width: 100%; height: 100%; border-radius: 14px; object-fit: cover; }
+
+        /* Loading Animation */
+        .logo-carousel-container { perspective: 1000px; width: 120px; height: 120px; position: relative; }
+        .logo-carousel-inner { width: 100%; height: 100%; position: absolute; transform-style: preserve-3d; animation: rotateCarousel 2s infinite linear; }
+        .carousel-item { position: absolute; width: 100px; height: 100px; left: 10px; top: 10px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); backface-visibility: visible; }
+        @keyframes rotateCarousel { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
         .item-1 { transform: rotateY(0deg) translateZ(100px); }
         .item-2 { transform: rotateY(120deg) translateZ(100px); }
         .item-3 { transform: rotateY(240deg) translateZ(100px); }
 
-        @keyframes rotateCarousel {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(-360deg); }
-        }
-
-        .pulse-animation {
-            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: .8; transform: scale(0.98); }
-        }
-
-        /* Heartbeat Loading Animation */
-        .ekg-container {
-            width: 180px;
-            height: 40px;
-            margin-top: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ekg-svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .ekg-path {
-            stroke: #808a5c;
-            stroke-width: 2;
-            fill: none;
-            stroke-dasharray: 500;
-            stroke-dashoffset: 500;
-            animation: ekg-draw 2s linear infinite;
-        }
-
-        @keyframes ekg-draw {
-            0% { stroke-dashoffset: 500; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { stroke-dashoffset: 0; opacity: 0; }
-        }
-
-        /* Swipe Button Styles */
-        .swipe-track {
-            position: relative;
-            width: 240px;
-            height: 60px;
-            background: #f4f4f5;
-            border-radius: 99px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 1px solid #e4e4e7;
-        }
-
-        .swipe-handle {
-            position: absolute;
-            left: 4px;
-            width: 52px;
-            height: 52px;
-            background: #808a5c;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: grab;
-            z-index: 2;
-            box-shadow: 0 4px 12px rgba(128, 138, 92, 0.3);
-            touch-action: none;
-        }
-
-        .swipe-text {
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #a1a1aa;
-            pointer-events: none;
-            user-select: none;
-            transition: opacity 0.2s ease;
-        }
-
-        /* Top Floating Install Prompt */
-        #install-prompt {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-150%);
-            background: #ffffff;
-            border: 1px solid #e4e4e7;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            padding: 8px 16px;
-            border-radius: 99px;
-            z-index: 9000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        #install-prompt.visible {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* QR Code Styles */
-        #qrcode-wrapper {
-            position: relative;
-            display: inline-block;
-            margin: 0 auto;
-        }
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #qrcode canvas, #qrcode img {
-            border: 4px solid #fff;
-            border-radius: 12px;
-            padding: 8px;
-            background: #fff;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        .qr-logo-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: white;
-            padding: 4px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .qr-logo-overlay img {
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-        /* Modal Styles */
-        #qr-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            z-index: 9500;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        #qr-modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 32px;
-            width: 100%;
-            max-width: 360px;
-            padding: 32px 24px;
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        #qr-modal.active .modal-content {
-            transform: scale(1);
-        }
-
-        .avatar-ring {
-            position: relative;
-            padding: 4px;
-            background: white;
-            border-radius: 9999px;
-            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1);
-            border: 1px solid #f4f4f5;
-        }
+        /* EKG Splash */
+        .ekg-path { stroke: var(--olive); stroke-width: 2; fill: none; stroke-dasharray: 500; stroke-dashoffset: 500; animation: ekg-draw 2s linear infinite; }
+        @keyframes ekg-draw { 0% { stroke-dashoffset: 500; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <!-- Splash Screen (Initial Load) -->
+    <!-- Splash Screen -->
     <div id="splash-screen">
-        <div class="pulse-animation flex flex-col items-center px-4">
-            <div class="flex items-center justify-center gap-3 sm:gap-6 mb-8">
-                <!-- Left Secondary Logo: UNCNVNTNL -->
-                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-white/5 p-1 flex items-center justify-center border border-white/10">
-                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" alt="UNCNVNTNL Logo" class="w-full h-full object-contain">
+        <div class="flex flex-col items-center px-4">
+            <div class="flex items-center justify-center gap-4 mb-10">
+                <div class="w-16 h-16 rounded-full overflow-hidden bg-white/10 p-1 border border-white/20">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" class="w-full h-full object-contain">
                 </div>
-                
-                <!-- Center Profile Avatar -->
-                <div class="relative flex items-center justify-center bg-zinc-800/10 rounded-full w-28 h-28 sm:w-36 sm:h-36 border-2 border-[#808a5c]/30 overflow-hidden shadow-2xl">
-                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Coach Chris" class="w-full h-full object-cover">
+                <div class="relative w-36 h-36 rounded-full border-4 border-[#808a5c] overflow-hidden shadow-[0_0_40px_rgba(128,138,92,0.4)]">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" class="w-full h-full object-cover">
                 </div>
-
-                <!-- Right Secondary Logo: CRC -->
-                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-white/5 p-1 flex items-center justify-center border border-white/10">
-                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" alt="CRC Logo" class="w-full h-full object-contain">
+                <div class="w-16 h-16 rounded-full overflow-hidden bg-white/10 p-1 border border-white/20">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" class="w-full h-full object-contain">
                 </div>
             </div>
-
-            <h1 class="text-white text-xl font-black uppercase tracking-[0.2em] text-center">Coach Chris <span class="text-[#808a5c]">CRC</span></h1>
-            
-            <div class="ekg-container">
-                <svg class="ekg-svg" viewBox="0 0 180 40">
+            <h1 class="text-white text-xl font-black uppercase tracking-[0.3em] mb-4">Coach Chris <span class="text-[#808a5c]">CRC</span></h1>
+            <div class="w-48 h-10 relative overflow-hidden">
+                <svg class="w-full h-full" viewBox="0 0 180 40">
                     <path class="ekg-path" d="M0,20 L40,20 L45,10 L55,30 L60,20 L90,20 L95,0 L105,40 L110,20 L180,20"></path>
                 </svg>
             </div>
         </div>
     </div>
 
-    <!-- Transition Screen (Logo Cycle Animation) -->
+    <!-- Transition Screen -->
     <div id="transition-screen">
         <div class="flex flex-col items-center">
             <div class="logo-carousel-container">
                 <div class="logo-carousel-inner">
-                    <div class="carousel-item item-1">
-                        <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Coach Chris">
-                    </div>
-                    <div class="carousel-item item-2">
-                        <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" alt="UNCNVNTNL">
-                    </div>
-                    <div class="carousel-item item-3">
-                        <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" alt="CRC">
-                    </div>
+                    <div class="carousel-item item-1"><img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" class="w-full h-full object-contain"></div>
+                    <div class="carousel-item item-2"><img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" class="w-full h-full object-contain"></div>
+                    <div class="carousel-item item-3"><img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" class="w-full h-full object-contain"></div>
                 </div>
             </div>
-            <div class="loading-pulse"></div>
+            <div class="w-10 h-1 bg-[#808a5c] rounded-full mt-16 animate-pulse"></div>
         </div>
-    </div>
-
-    <!-- Top Floating Install Prompt -->
-    <div id="install-prompt">
-        <div class="w-6 h-6 rounded-full bg-[#808a5c] flex items-center justify-center text-white">
-            <i data-lucide="download" class="w-3 h-3"></i>
-        </div>
-        <span class="text-[9px] font-black uppercase tracking-[0.1em] text-zinc-800">Save to Device</span>
-        <button id="install-button" class="bg-zinc-800 text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest active:scale-95 transition-transform">Add</button>
-        <button id="close-install" class="text-zinc-300 p-1"><i data-lucide="x" class="w-3 h-3"></i></button>
     </div>
 
     <!-- QR Modal -->
     <div id="qr-modal">
         <div class="modal-content text-center">
-            <h2 class="rock-salt font-bold text-xl text-zinc-800 uppercase tracking-tight mb-6">COACH CHRIS</h2>
-            <div id="qrcode-wrapper" class="mb-6">
+            <h2 class="rock-salt font-bold text-xl text-zinc-800 uppercase tracking-tight mb-8">COACH CHRIS</h2>
+            <div id="qrcode-wrapper" class="relative inline-block mb-8">
                 <div id="qrcode"></div>
                 <div class="qr-logo-overlay">
-                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Logo">
+                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png">
                 </div>
             </div>
-            <div class="flex flex-col items-center mb-6">
-                <h3 class="text-black font-[900] text-lg uppercase tracking-tighter mb-1">Chris Hedley</h3>
-                <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-3">Online Coach & PT</p>
-                <div class="flex flex-col gap-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-3 italic">
+            <div class="flex flex-col items-center mb-8">
+                <h3 class="text-black font-black text-2xl uppercase tracking-tight mb-1">Chris Hedley</h3>
+                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-4">Online Coach & PT</p>
+                <div class="flex flex-col gap-1 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-6 italic">
                     <span>Circular Roots Coaching</span>
                     <span>TRAIN UNCNVNTNL</span>
                 </div>
-                <p class="text-[#808a5c] text-[10px] font-[900] uppercase tracking-[0.2em] mb-4">#FITTER #STRONGER #BETTER</p>
-                <p class="text-zinc-400 text-[9px] font-bold uppercase tracking-[0.15em]">Scan QR Code to connect</p>
+                <p class="text-[#808a5c] text-xs font-black uppercase tracking-[0.3em]">#FITTER #STRONGER #BETTER</p>
             </div>
-            <button id="close-qr" class="w-full bg-zinc-100 text-zinc-600 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform">Dismiss</button>
+            <button id="close-qr" class="w-full bg-zinc-900 text-white py-5 rounded-2xl text-xs font-black uppercase tracking-widest active:scale-95 transition-transform">Dismiss</button>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div id="main-card" class="flex flex-col items-center text-center p-6 w-full max-sm:max-w-xs py-10">
-        <div id="profile-header" class="mb-6 opacity-0 transition-all duration-700 -translate-y-4">
-            <div class="flex flex-col items-center">
-                <div class="avatar-ring mb-8">
-                    <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" alt="Coach Chris" class="w-40 h-40 rounded-full object-cover">
+    <!-- Main Card -->
+    <div class="card-perspective">
+        <div id="main-card" class="card-container opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+            <div class="avatar-ring">
+                <div class="avatar-flipper" id="avatar-flipper">
+                    <img id="avatar-front" src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" alt="Logo Front">
+                    <img id="avatar-back" src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" alt="Logo Back" style="transform: rotateY(180deg);">
                 </div>
-                <h2 class="rock-salt font-bold text-3xl text-zinc-800 uppercase tracking-tight mb-4">COACH CHRIS</h2>
-                <h3 class="text-black font-[900] text-2xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
-                <p class="text-zinc-500 text-[12px] font-bold uppercase tracking-widest mb-4">Online Coach & PT</p>
-                <div class="flex flex-col gap-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-5 italic">
-                    <span>Circular Roots Coaching</span>
-                    <span>TRAIN UNCNVNTNL</span>
-                </div>
-                <p class="text-[#808a5c] text-[11px] font-[900] uppercase tracking-[0.25em]">#FITTER #STRONGER #BETTER</p>
             </div>
-        </div>
 
-        <div id="dashboard-ui" class="flex w-full flex-col items-center opacity-0 transform translate-y-4 transition-all duration-700 space-y-10">
-            <!-- QR Button Area -->
-            <button id="open-qr" class="bg-zinc-100 text-zinc-800 p-5 rounded-2xl flex items-center justify-center hover:bg-zinc-200 active:scale-95 transition-all">
-                <i data-lucide="qr-code" class="w-6 h-6"></i>
-            </button>
+            <h2 class="rock-salt font-bold text-2xl text-zinc-800 uppercase tracking-tight mb-4">COACH CHRIS</h2>
+            <h3 class="text-black font-black text-2xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
+            <p class="text-zinc-500 text-xs font-bold uppercase tracking-[0.25em] mb-6">Online Coach & PT</p>
+            
+            <div class="flex flex-col gap-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-zinc-700 mb-10 italic">
+                <span>Circular Roots Coaching</span>
+                <span>TRAIN UNCNVNTNL</span>
+            </div>
 
-            <!-- Swipe Button Area -->
-            <div class="swipe-track">
-                <div class="swipe-handle" id="swipe-handle">
-                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
+            <div class="flex flex-col w-full gap-6">
+                <button id="open-qr" class="flex items-center justify-center gap-3 w-full bg-zinc-900 text-white p-5 rounded-2xl shadow-lg active:scale-[0.98] transition-all">
+                    <i data-lucide="qr-code" class="w-5 h-5"></i>
+                    <span class="text-xs font-black uppercase tracking-widest">Share My Card</span>
+                </button>
+
+                <div class="swipe-track">
+                    <div class="swipe-handle" id="swipe-handle">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </div>
+                    <span class="swipe-text" id="swipe-text">Swipe to Explore</span>
                 </div>
-                <span class="swipe-text" id="swipe-text">Swipe to Explore</span>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-zinc-100 w-full">
+                <p class="text-[#808a5c] text-[10px] font-black uppercase tracking-[0.4em]">#FITTER #STRONGER #BETTER</p>
             </div>
         </div>
     </div>
 
     <script>
         const EXTERNAL_URL = "https://coachchriscrc.carrd.co";
+        const LOGOS = [
+            "https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png",
+            "https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png",
+            "https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png"
+        ];
+
         const splash = document.getElementById('splash-screen');
         const transitionScreen = document.getElementById('transition-screen');
-        const profileHeader = document.getElementById('profile-header');
-        const ui = document.getElementById('dashboard-ui');
+        const mainCard = document.getElementById('main-card');
         const qrModal = document.getElementById('qr-modal');
         const openQrBtn = document.getElementById('open-qr');
         const closeQrBtn = document.getElementById('close-qr');
         const handle = document.getElementById('swipe-handle');
         const swipeText = document.getElementById('swipe-text');
-        const installPrompt = document.getElementById('install-prompt');
-        const installButton = document.getElementById('install-button');
-        const closeInstall = document.getElementById('close-install');
+        const flipper = document.getElementById('avatar-flipper');
+        const frontImg = document.getElementById('avatar-front');
 
-        let deferredPrompt;
+        async function runAvatarSequence() {
+            setTimeout(() => {
+                flipper.style.transform = 'rotateY(180deg)';
+            }, 800);
+            setTimeout(() => {
+                frontImg.src = LOGOS[2];
+                flipper.style.transform = 'rotateY(360deg)';
+            }, 1800);
+        }
 
         function revealDashboard() {
             splash.classList.add('fade-out');
             setTimeout(() => {
-                profileHeader.classList.remove('opacity-0', '-translate-y-4');
-                ui.classList.remove('opacity-0', 'translate-y-4');
-                
-                if (deferredPrompt) {
-                    setTimeout(() => {
-                        installPrompt.classList.add('visible');
-                    }, 1200);
-                }
+                mainCard.classList.remove('opacity-0', 'translate-y-12');
+                runAvatarSequence();
             }, 200);
         }
 
-        function resetSwipe() {
-            handle.style.transition = 'none';
-            handle.style.transform = `translateX(0px)`;
-            swipeText.style.opacity = 1;
-            handle.offsetHeight; 
-            handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        }
+        window.addEventListener('load', () => setTimeout(revealDashboard, 2000));
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        installButton.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                installPrompt.classList.remove('visible');
-            }
-            deferredPrompt = null;
-        });
-
-        closeInstall.addEventListener('click', () => {
-            installPrompt.classList.remove('visible');
-        });
-
-        window.addEventListener('pageshow', (event) => {
-            transitionScreen.classList.remove('active');
-            resetSwipe();
-        });
-
-        // Speed up splash for installed PWA
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        const splashDuration = isStandalone ? 1000 : 2000;
-
-        window.addEventListener('load', () => setTimeout(revealDashboard, splashDuration));
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    const CACHE_NAME = 'coach-chris-v15';
-                    self.addEventListener('install', (e) => {
-                        e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(['./'])));
-                    });
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const workerUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(workerUrl).catch(err => console.log('SW Registration Failed', err));
-            });
-        }
-
+        // Drag/Swipe Logic
         let isDragging = false;
         let startX = 0;
-        const maxDelta = 240 - 52 - 8;
 
         function onStart(e) {
             isDragging = true;
@@ -565,6 +333,8 @@
             if (!isDragging) return;
             const currentX = (e.type === 'touchmove') ? e.touches[0].clientX : e.clientX;
             let delta = currentX - startX;
+            const trackWidth = document.querySelector('.swipe-track').offsetWidth;
+            const maxDelta = trackWidth - 56 - 16;
             delta = Math.max(0, Math.min(delta, maxDelta));
             handle.style.transform = `translateX(${delta}px)`;
             swipeText.style.opacity = 1 - (delta / maxDelta);
@@ -573,20 +343,19 @@
         function onEnd() {
             if (!isDragging) return;
             isDragging = false;
+            const matrix = new WebKitCSSMatrix(window.getComputedStyle(handle).transform);
+            const trackWidth = document.querySelector('.swipe-track').offsetWidth;
+            const maxDelta = trackWidth - 56 - 16;
             
-            const style = window.getComputedStyle(handle);
-            const matrix = new WebKitCSSMatrix(style.transform);
-            const currentTransform = matrix.m41;
-            
-            if (currentTransform >= maxDelta * 0.9) {
+            if (matrix.m41 >= maxDelta * 0.9) {
                 handle.style.transition = 'transform 0.2s ease-out';
                 handle.style.transform = `translateX(${maxDelta}px)`;
                 transitionScreen.classList.add('active');
-                setTimeout(() => {
-                    window.location.href = EXTERNAL_URL;
-                }, 800);
+                setTimeout(() => window.location.href = EXTERNAL_URL, 800);
             } else {
-                resetSwipe();
+                handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                handle.style.transform = `translateX(0px)`;
+                swipeText.style.opacity = 1;
             }
         }
 
@@ -600,7 +369,6 @@
         lucide.createIcons();
         openQrBtn.addEventListener('click', () => qrModal.classList.add('active'));
         closeQrBtn.addEventListener('click', () => qrModal.classList.remove('active'));
-        qrModal.addEventListener('click', (e) => { if(e.target === qrModal) qrModal.classList.remove('active'); });
 
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
