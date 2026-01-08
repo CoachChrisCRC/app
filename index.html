@@ -82,7 +82,7 @@
             justify-content: center;
             z-index: 9998;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.2s ease; /* Faster fade in/out */
         }
 
         #transition-screen.active {
@@ -497,6 +497,16 @@
             }, 200);
         }
 
+        function resetSwipe() {
+            // Instant reset for clean state
+            handle.style.transition = 'none';
+            handle.style.transform = `translateX(0px)`;
+            swipeText.style.opacity = 1;
+            // Force a reflow before re-enabling transition
+            handle.offsetHeight; 
+            handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        }
+
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -516,9 +526,8 @@
             installPrompt.classList.remove('visible');
         });
 
-        // CRITICAL FIX: Ensure transition screen is hidden on back-navigation
+        // Ensure transition screen is absolutely hidden and button is reset on back-navigation
         window.addEventListener('pageshow', (event) => {
-            // Hide transition screen and reset swipe whenever page is shown (back navigation or fresh load)
             transitionScreen.classList.remove('active');
             resetSwipe();
         });
@@ -528,7 +537,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'coach-chris-v13';
+                    const CACHE_NAME = 'coach-chris-v14';
                     self.addEventListener('install', (e) => {
                         e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(['./'])));
                     });
@@ -561,12 +570,6 @@
             swipeText.style.opacity = 1 - (delta / maxDelta);
         }
 
-        function resetSwipe() {
-            handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            handle.style.transform = `translateX(0px)`;
-            swipeText.style.opacity = 1;
-        }
-
         function onEnd() {
             if (!isDragging) return;
             isDragging = false;
@@ -582,7 +585,7 @@
                 // Show transition animation
                 transitionScreen.classList.add('active');
                 
-                // Redirect after brief animation delay
+                // Redirect after brief animation delay (800ms)
                 setTimeout(() => {
                     window.location.href = EXTERNAL_URL;
                 }, 800);
