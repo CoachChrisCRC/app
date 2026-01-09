@@ -318,11 +318,17 @@
         const EXTERNAL_URL = "https://coachchriscrc.carrd.co";
         
         const CONTACT_INFO = {
-            name: "Coach Chris (Chris Hedley)",
+            firstName: "Chris",
+            lastName: "Hedley",
+            suffix: "(Coach Chris)",
+            fullName: "Chris Hedley (Coach Chris)",
             phone: "+447925116794",
             email: "Circularrootscoaching@gmail.com",
             web: "https://coachchriscrc.carrd.co",
-            whatsapp: "https://wa.me/447925116794"
+            whatsapp: "https://wa.me/447925116794",
+            title: "Online Coach & PT",
+            org: "Circular Roots Coaching;TRAIN UNCNVNTNL",
+            note: "#FITTER #STRONGER #BETTER"
         };
 
         const LOGOS = [
@@ -370,13 +376,10 @@
             }, 200);
         }
 
-        // Timing synchronized exactly with 1.5s EKG animation sweep
         window.addEventListener('load', () => setTimeout(revealDashboard, 1500));
 
-        // CRITICAL: Handle back-navigation from external link
         window.addEventListener('pageshow', (event) => {
             if (event.persisted) {
-                // If loaded from cache (back button), immediately hide all loaders
                 splash.classList.add('fade-out');
                 transitionScreen.classList.remove('active');
                 mainCard.classList.remove('opacity-0', 'translate-y-12');
@@ -384,17 +387,18 @@
             }
         });
 
-        // Generate vCard with custom label support
         saveVcardBtn.addEventListener('click', () => {
             const vcard = [
                 "BEGIN:VCARD",
                 "VERSION:3.0",
-                `FN:${CONTACT_INFO.name}`,
-                `N:Hedley;Chris (Coach Chris);;;`,
+                `FN:${CONTACT_INFO.fullName}`,
+                `N:${CONTACT_INFO.lastName};${CONTACT_INFO.firstName};;${CONTACT_INFO.suffix};`,
+                `ORG:${CONTACT_INFO.org}`,
+                `TITLE:${CONTACT_INFO.title}`,
                 `EMAIL;TYPE=WORK,INTERNET:${CONTACT_INFO.email}`,
                 `TEL;TYPE=CELL,VOICE:${CONTACT_INFO.phone}`,
                 `URL;TYPE=WORK:${CONTACT_INFO.web}`,
-                // Using X-ABLabel extension to tag the WhatsApp link specifically
+                `NOTE:${CONTACT_INFO.note}`,
                 "item1.URL:" + CONTACT_INFO.whatsapp,
                 "item1.X-ABLabel:WhatsApp",
                 "END:VCARD"
