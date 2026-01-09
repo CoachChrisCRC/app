@@ -28,24 +28,30 @@
         :root { 
             --olive: #808a5c; 
             --bg-gradient-start: #ffffff;
-            --bg-gradient-end: #f2f2f2;
-            --card-bg-gradient: radial-gradient(circle at top left, rgba(128, 138, 92, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%);
-            --card-border: rgba(0, 0, 0, 0.05);
-            --card-inner-glow: rgba(255, 255, 255, 0.5);
-            --card-shadow: rgba(0, 0, 0, 0.15);
-            --text-main: #000000;
-            --text-muted: #71717a;
-            --text-sub: #3f3f46;
-            --ring-bg: white;
-            --track-bg: #ffffff;
-            --swipe-text: #a1a1aa;
+            --bg-gradient-end: #f4f4f5;
+            --card-bg-gradient: radial-gradient(circle at top left, rgba(128, 138, 92, 0.18) 0%, rgba(255, 255, 255, 0.98) 100%);
+            --modal-bg: #ffffff;
+            --card-border: rgba(0, 0, 0, 0.15);
+            --card-inner-glow: rgba(255, 255, 255, 0.8);
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --text-main: #09090b;
+            --text-muted: #3f3f46;
+            --text-sub: #18181b;
+            --ring-bg: #ffffff;
+            --track-bg: #e4e4e7;
+            --swipe-text: #52525b;
+            --btn-ghost-bg: #f4f4f5;
+            --btn-border: #27272a;
+            --icon-bg: #f4f4f5;
         }
 
+        /* Default Dark Mode (based on system) */
         @media (prefers-color-scheme: dark) {
-            :root {
+            :root:not([data-theme="light"]) {
                 --bg-gradient-start: #18181b;
                 --bg-gradient-end: #09090b;
                 --card-bg-gradient: radial-gradient(circle at top left, rgba(128, 138, 92, 0.2) 0%, rgba(24, 24, 27, 0.85) 100%);
+                --modal-bg: radial-gradient(circle at top left, rgba(128, 138, 92, 0.2) 0%, rgba(24, 24, 27, 0.85) 100%);
                 --card-border: rgba(255, 255, 255, 0.1);
                 --card-inner-glow: rgba(255, 255, 255, 0.05);
                 --card-shadow: rgba(0, 0, 0, 0.5);
@@ -55,7 +61,50 @@
                 --ring-bg: #27272a;
                 --track-bg: rgba(39, 39, 42, 0.6);
                 --swipe-text: #71717a;
+                --btn-ghost-bg: rgba(39, 39, 42, 0.5);
+                --btn-border: #f4f4f5;
+                --icon-bg: rgba(39, 39, 42, 0.6);
             }
+        }
+
+        /* Explicit Dark Mode */
+        :root[data-theme="dark"] {
+            --bg-gradient-start: #18181b;
+            --bg-gradient-end: #09090b;
+            --card-bg-gradient: radial-gradient(circle at top left, rgba(128, 138, 92, 0.2) 0%, rgba(24, 24, 27, 0.85) 100%);
+            --modal-bg: radial-gradient(circle at top left, rgba(128, 138, 92, 0.2) 0%, rgba(24, 24, 27, 0.85) 100%);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-inner-glow: rgba(255, 255, 255, 0.05);
+            --card-shadow: rgba(0, 0, 0, 0.5);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --text-sub: #d4d4d8;
+            --ring-bg: #27272a;
+            --track-bg: rgba(39, 39, 42, 0.6);
+            --swipe-text: #71717a;
+            --btn-ghost-bg: rgba(39, 39, 42, 0.5);
+            --btn-border: #f4f4f5;
+            --icon-bg: rgba(39, 39, 42, 0.6);
+        }
+
+        /* Explicit Light Mode */
+        :root[data-theme="light"] {
+            --bg-gradient-start: #ffffff;
+            --bg-gradient-end: #f4f4f5;
+            --card-bg-gradient: radial-gradient(circle at top left, rgba(128, 138, 92, 0.18) 0%, rgba(255, 255, 255, 0.98) 100%);
+            --modal-bg: #ffffff;
+            --card-border: rgba(0, 0, 0, 0.2);
+            --card-inner-glow: rgba(255, 255, 255, 0.8);
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --text-main: #000000;
+            --text-muted: #27272a;
+            --text-sub: #18181b;
+            --ring-bg: #ffffff;
+            --track-bg: #e4e4e7;
+            --swipe-text: #3f3f46;
+            --btn-ghost-bg: #f4f4f5;
+            --btn-border: #000000;
+            --icon-bg: #f4f4f5;
         }
         
         body { 
@@ -70,7 +119,7 @@
             align-items: center; 
             justify-content: flex-start; 
             min-height: 100svh;
-            transition: background 0.3s ease;
+            transition: background 0.5s ease, color 0.5s ease;
             padding: 40px 20px;
         }
 
@@ -134,19 +183,30 @@
             text-align: center;
             position: relative;
             transform-style: preserve-3d;
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
 
         .avatar-ring { 
             position: relative; 
-            padding: 8px; 
+            padding: 6px; 
             background: var(--ring-bg); 
             border-radius: 50%; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-bottom: 20px; 
             perspective: 1000px;
+            transition: background 0.5s ease;
         }
         .avatar-flipper { width: 130px; height: 130px; position: relative; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .avatar-flipper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; position: absolute; backface-visibility: hidden; border: 4px solid var(--ring-bg); }
+        .avatar-flipper img { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            position: absolute; 
+            backface-visibility: hidden; 
+            border: 1.5px solid var(--olive); 
+            transition: border-color 0.5s ease; 
+        }
 
         .swipe-track { 
             position: relative; 
@@ -162,6 +222,7 @@
             border: 1px solid var(--card-border);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
         .swipe-handle { 
             position: absolute; 
@@ -179,12 +240,12 @@
             box-shadow: 0 4px 15px rgba(128, 138, 92, 0.4); 
             touch-action: none; 
         }
-        .swipe-text { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--swipe-text); pointer-events: none; }
+        .swipe-text { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--swipe-text); pointer-events: none; transition: color 0.5s ease; }
 
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 9500; align-items: center; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9500; align-items: center; justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { 
-            background: var(--card-bg-gradient); 
+            background: var(--modal-bg); 
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--card-border);
@@ -193,8 +254,8 @@
             max-width: 380px; 
             padding: 40px 24px; 
             transform: scale(0.9); 
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
             position: relative;
         }
         .modal-overlay.active .modal-content { transform: scale(1); }
@@ -205,15 +266,16 @@
         .fab-container {
             position: fixed;
             top: 30px;
-            right: 30px;
-            display: none;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             z-index: 9000;
         }
         .fab {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: var(--track-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -222,11 +284,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid var(--olive);
+            border: 1px solid var(--card-border);
         }
+        .fab:active { transform: scale(0.9); }
+        #save-ui-container { display: none; }
 
         .ekg-path { stroke: var(--olive); stroke-width: 2; fill: none; stroke-dasharray: 500; stroke-dashoffset: 500; animation: ekg-draw 1.5s linear forwards; }
         @keyframes ekg-draw { 0% { stroke-dashoffset: 500; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
@@ -284,9 +348,26 @@
             border-radius: 10px;
         }
 
-        .text-main { color: var(--text-main); }
-        .text-muted { color: var(--text-muted); }
-        .text-sub { color: var(--text-sub); }
+        .text-main { color: var(--text-main); transition: color 0.5s ease; }
+        .text-muted { color: var(--text-muted); transition: color 0.5s ease; }
+        .text-sub { color: var(--text-sub); transition: color 0.5s ease; }
+        
+        /* Interactive element consistency */
+        #save-vcard { border-color: var(--btn-border); color: var(--text-main); }
+        #open-testimonials { background-color: var(--btn-ghost-bg); border-color: var(--card-border); color: var(--text-main); }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--icon-bg);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--olive);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .contact-icon:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -298,7 +379,7 @@
                 <div class="w-16 h-16 rounded-full overflow-hidden bg-white/10 p-1 border border-white/20">
                     <img src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" class="w-full h-full object-contain">
                 </div>
-                <div class="relative w-36 h-36 rounded-full border-4 border-[#808a5c] overflow-hidden shadow-[0_0_40px_rgba(128,138,92,0.4)]">
+                <div class="relative w-36 h-36 rounded-full border-2 border-[#808a5c] overflow-hidden shadow-[0_0_40px_rgba(128,138,92,0.4)]">
                     <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png" class="w-full h-full object-cover">
                 </div>
                 <div class="w-16 h-16 rounded-full overflow-hidden bg-white/10 p-1 border border-white/20">
@@ -327,7 +408,7 @@
     <div id="qr-modal" class="modal-overlay">
         <div class="modal-content text-center">
             <h2 class="rock-salt font-bold text-xl text-main uppercase tracking-tight mb-8">COACH CHRIS</h2>
-            <div id="qrcode-wrapper" class="relative inline-block mb-8 p-4 bg-white rounded-3xl">
+            <div id="qrcode-wrapper" class="relative inline-block mb-8 p-4 bg-white rounded-3xl border border-zinc-200">
                 <div id="qrcode"></div>
                 <div class="qr-logo-overlay">
                     <img src="https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png">
@@ -355,7 +436,7 @@
             </div>
             
             <div class="testimonial-slider" id="testimonial-slider">
-                <!-- 1. Paul "Spider" Chan -->
+                <!-- Testimonial Cards (1-8) -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -368,7 +449,6 @@
                     </div>
                 </div>
                 
-                <!-- 2. Alana Giuliani -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -381,7 +461,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Louise Baker -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -394,7 +473,6 @@
                     </div>
                 </div>
 
-                <!-- 4. Suzanne Thompson -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -407,7 +485,6 @@
                     </div>
                 </div>
 
-                <!-- 5. Kris McGough -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -420,7 +497,6 @@
                     </div>
                 </div>
 
-                <!-- 6. Vicky Jackson -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -433,7 +509,6 @@
                     </div>
                 </div>
 
-                <!-- 7. Lisa Watson -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -446,7 +521,6 @@
                     </div>
                 </div>
 
-                <!-- 8. Kelly Coats -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -475,10 +549,17 @@
         </div>
     </div>
 
-    <!-- Floating Install Button -->
-    <div class="fab-container" id="save-ui-container">
-        <div class="fab" id="fab-save" title="Install App">
-            <i data-lucide="download" class="w-5 h-5"></i>
+    <!-- Floating Actions -->
+    <div class="fab-container">
+        <!-- Install App FAB -->
+        <div id="save-ui-container">
+            <div class="fab" id="fab-save" title="Install App">
+                <i data-lucide="download" class="w-5 h-5"></i>
+            </div>
+        </div>
+        <!-- Theme Toggle FAB -->
+        <div class="fab" id="theme-toggle" title="Toggle Theme">
+            <i data-lucide="moon" class="w-5 h-5" id="theme-icon"></i>
         </div>
     </div>
 
@@ -503,7 +584,7 @@
 
             <div class="flex flex-col w-full gap-4">
                 <div class="grid grid-cols-2 gap-3 w-full">
-                    <button id="open-qr" class="flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 py-4 rounded-2xl shadow-md active:scale-[0.96] transition-all">
+                    <button id="open-qr" class="flex items-center justify-center gap-2 bg-[#808a5c] text-white py-4 rounded-2xl shadow-md active:scale-[0.96] transition-all">
                         <i data-lucide="qr-code" class="w-4 h-4"></i>
                         <span class="text-[9px] font-black uppercase tracking-widest">Share Card</span>
                     </button>
@@ -511,10 +592,26 @@
                         <i data-lucide="user-plus" class="w-4 h-4"></i>
                         <span class="text-[9px] font-black uppercase tracking-widest">Save Contact</span>
                     </button>
-                    <button id="open-testimonials" class="col-span-2 flex items-center justify-center gap-2 bg-white/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 active:scale-[0.96] transition-all">
+                    <button id="open-testimonials" class="col-span-2 flex items-center justify-center gap-2 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 active:scale-[0.96] transition-all">
                         <i data-lucide="star" class="w-4 h-4 text-[#808a5c]"></i>
                         <span class="text-[9px] font-black uppercase tracking-widest">Success Stories</span>
                     </button>
+                </div>
+
+                <!-- NEW: Immediate Contact Feature -->
+                <div class="w-full py-4">
+                    <p class="text-[8px] font-black uppercase tracking-[.3em] text-muted mb-4">Direct Channels</p>
+                    <div class="flex justify-center gap-4">
+                        <a href="https://wa.me/447925116794" target="_blank" class="contact-icon">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                        </a>
+                        <a href="mailto:Circularrootscoaching@gmail.com" class="contact-icon">
+                            <i data-lucide="mail" class="w-6 h-6"></i>
+                        </a>
+                        <a href="https://instagram.com/coachchris_crc" target="_blank" class="contact-icon">
+                            <i data-lucide="instagram" class="w-6 h-6"></i>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="swipe-track">
@@ -525,7 +622,7 @@
                 </div>
             </div>
 
-            <div class="mt-6 pt-6 border-t border-zinc-100 dark:border-zinc-800/50 w-full">
+            <div class="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-800/50 w-full">
                 <p class="text-[#808a5c] text-[8px] font-black uppercase tracking-[0.4em]">#FITTER #STRONGER #BETTER</p>
             </div>
         </div>
@@ -570,6 +667,43 @@
         const saveUiContainer = document.getElementById('save-ui-container');
         const slider = document.getElementById('testimonial-slider');
         const dots = document.querySelectorAll('.testimonial-dot');
+        
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                updateThemeIcon(savedTheme);
+            } else {
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                updateThemeIcon(systemDark ? 'dark' : 'light');
+            }
+        }
+
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        themeToggle.addEventListener('click', () => {
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            if (!currentTheme) {
+                currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        initTheme();
 
         let deferredPrompt;
 
@@ -577,7 +711,7 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            if (!isStandalone) saveUiContainer.style.display = 'flex';
+            if (!isStandalone) saveUiContainer.style.display = 'block';
         });
 
         async function runAvatarSequence() {
@@ -680,15 +814,8 @@
             if (matrix.m41 >= maxDelta * 0.9) {
                 handle.style.transition = 'transform 0.2s ease-out';
                 handle.style.transform = `translateX(${maxDelta}px)`;
-                
-                // Show transition screen
                 transitionScreen.classList.add('active');
-                
-                // Redirect
                 window.location.href = EXTERNAL_URL;
-
-                // Safety: If the page doesn't unload immediately or they come back
-                // Hide loader after a delay so they aren't stuck if they hit 'Back'
                 setTimeout(() => {
                     transitionScreen.classList.remove('active');
                     resetSwipe();
@@ -698,7 +825,6 @@
             }
         }
 
-        // Handle page visibility change (user returns to card)
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 transitionScreen.classList.remove('active');
@@ -716,7 +842,6 @@
         lucide.createIcons();
         openQrBtn.addEventListener('click', () => qrModal.classList.add('active'));
         closeQrBtn.addEventListener('click', () => qrModal.classList.remove('active'));
-        
         openTestimonialsBtn.addEventListener('click', () => testimonialsModal.classList.add('active'));
         closeTestimonialsBtn.addEventListener('click', () => testimonialsModal.classList.remove('active'));
 
