@@ -680,14 +680,31 @@
             if (matrix.m41 >= maxDelta * 0.9) {
                 handle.style.transition = 'transform 0.2s ease-out';
                 handle.style.transform = `translateX(${maxDelta}px)`;
+                
+                // Show transition screen
                 transitionScreen.classList.add('active');
+                
+                // Redirect
+                window.location.href = EXTERNAL_URL;
+
+                // Safety: If the page doesn't unload immediately or they come back
+                // Hide loader after a delay so they aren't stuck if they hit 'Back'
                 setTimeout(() => {
-                    window.location.href = EXTERNAL_URL;
-                }, 800);
+                    transitionScreen.classList.remove('active');
+                    resetSwipe();
+                }, 2000);
             } else {
                 resetSwipe();
             }
         }
+
+        // Handle page visibility change (user returns to card)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                transitionScreen.classList.remove('active');
+                resetSwipe();
+            }
+        });
 
         handle.addEventListener('mousedown', onStart);
         handle.addEventListener('touchstart', onStart, { passive: true });
