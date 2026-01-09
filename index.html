@@ -72,7 +72,7 @@
             justify-content: center;
             z-index: 9998;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
         }
         #transition-screen.active { display: flex; opacity: 1; }
 
@@ -178,9 +178,31 @@
             border: 2px solid #808a5c;
         }
 
-        /* EKG Splash */
-        .ekg-path { stroke: var(--olive); stroke-width: 2; fill: none; stroke-dasharray: 500; stroke-dashoffset: 500; animation: ekg-draw 2s linear infinite; }
+        /* EKG Splash - Set to exactly one cycle of 1.5s */
+        .ekg-path { stroke: var(--olive); stroke-width: 2; fill: none; stroke-dasharray: 500; stroke-dashoffset: 500; animation: ekg-draw 1.5s linear forwards; }
         @keyframes ekg-draw { 0% { stroke-dashoffset: 500; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+
+        /* Minimalist Line Loader */
+        .line-loader-container {
+            width: 140px;
+            height: 2px;
+            background: #f3f4f6;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .line-loader-bar {
+            width: 40%;
+            height: 100%;
+            background: var(--olive);
+            position: absolute;
+            animation: line-slide 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+        @keyframes line-slide {
+            0% { left: -40%; width: 40%; }
+            50% { width: 60%; }
+            100% { left: 100%; width: 40%; }
+        }
     </style>
 </head>
 <body>
@@ -208,11 +230,12 @@
         </div>
     </div>
 
-    <!-- Transition Screen -->
+    <!-- Transition Screen (Minimalist - No Text) -->
     <div id="transition-screen">
         <div class="flex flex-col items-center">
-            <div class="w-16 h-16 bg-[#808a5c] rounded-full animate-ping opacity-25"></div>
-            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mt-8">Redirecting...</p>
+            <div class="line-loader-container">
+                <div class="line-loader-bar"></div>
+            </div>
         </div>
     </div>
 
@@ -294,7 +317,6 @@
     <script>
         const EXTERNAL_URL = "https://coachchriscrc.carrd.co";
         
-        // Exact contact details requested
         const CONTACT_INFO = {
             name: "Coach Chris (Chris Hedley)",
             phone: "+447925116794",
@@ -325,7 +347,6 @@
 
         let deferredPrompt;
 
-        // PWA Handling
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -349,16 +370,17 @@
             }, 200);
         }
 
-        window.addEventListener('load', () => setTimeout(revealDashboard, 2000));
+        // Timing synchronized exactly with 1.5s EKG animation sweep
+        window.addEventListener('load', () => setTimeout(revealDashboard, 1500));
 
-        // Generate vCard with requested information
+        // Generate vCard
         saveVcardBtn.addEventListener('click', () => {
             const vcard = [
                 "BEGIN:VCARD",
                 "VERSION:3.0",
                 `FN:${CONTACT_INFO.name}`,
                 `N:Hedley;Chris (Coach Chris);;;`,
-                `EMAIL;TYPE=PREF,INTERNET:${CONTACT_INFO.email}`,
+                `EMAIL;TYPE=WORK,INTERNET:${CONTACT_INFO.email}`,
                 `TEL;TYPE=CELL,VOICE:${CONTACT_INFO.phone}`,
                 `URL;TYPE=WORK:${CONTACT_INFO.web}`,
                 `URL;TYPE=WHATSAPP:${CONTACT_INFO.whatsapp}`,
@@ -385,7 +407,6 @@
             }
         });
 
-        // Swipe Mechanic
         let isDragging = false;
         let startX = 0;
 
@@ -410,7 +431,6 @@
             handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             handle.style.transform = `translateX(0px)`;
             swipeText.style.opacity = 1;
-            transitionScreen.classList.remove('active');
         }
 
         function onEnd() {
@@ -427,7 +447,6 @@
                 transitionScreen.classList.add('active');
                 setTimeout(() => {
                     window.location.href = EXTERNAL_URL;
-                    setTimeout(resetSwipe, 500);
                 }, 800);
             } else {
                 resetSwipe();
