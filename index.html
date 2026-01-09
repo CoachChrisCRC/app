@@ -677,18 +677,22 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
 
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                updateThemeIcon(savedTheme);
-            } else {
-                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                updateThemeIcon(systemDark ? 'dark' : 'light');
-            }
+        /**
+         * Determine the effective theme.
+         * Priority: 1. Manual override (localStorage), 2. System preference.
+         */
+        function getEffectiveTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
 
+        /**
+         * Updates the UI icon to reflect the ACTION available (e.g., Sun in dark mode).
+         */
         function updateThemeIcon(theme) {
+            // If current theme is dark, show SUN (to switch to light)
+            // If current theme is light, show MOON (to switch to dark)
             if (theme === 'dark') {
                 themeIcon.setAttribute('data-lucide', 'sun');
             } else {
@@ -697,16 +701,30 @@
             lucide.createIcons();
         }
 
-        themeToggle.addEventListener('click', () => {
-            let currentTheme = document.documentElement.getAttribute('data-theme');
-            if (!currentTheme) {
-                currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        function initTheme() {
+            const theme = getEffectiveTheme();
+            // Only set data-theme if there is a manual override, 
+            // otherwise rely on the CSS @media (prefers-color-scheme)
+            if (localStorage.getItem('theme')) {
+                document.documentElement.setAttribute('data-theme', theme);
             }
+            updateThemeIcon(theme);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const current = getEffectiveTheme();
+            const next = current === 'dark' ? 'light' : 'dark';
             
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcon(next);
+        });
+
+        // Listen for system changes to update icon dynamically if no override exists
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                updateThemeIcon(e.matches ? 'dark' : 'light');
+            }
         });
 
         initTheme();
