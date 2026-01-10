@@ -352,7 +352,7 @@
         </div>
     </div>
 
-    <!-- Transition Screen (Used only for Swipe Navigation now) -->
+    <!-- Transition Screen (Loading Overlay) -->
     <div id="transition-screen">
         <div class="flex flex-col items-center">
             <div class="line-loader-container">
@@ -669,16 +669,31 @@
             }, 200);
         }
 
+        // Improved Navigation Logic
         function triggerNavigation(url, withLoading = true) {
             if (withLoading) {
                 transitionScreen.classList.add('active');
+                // We use a small timeout to ensure the UI updates before navigation starts
                 setTimeout(() => {
                     window.location.href = url;
-                }, 500);
+                }, 100);
             } else {
                 window.location.href = url;
             }
         }
+
+        // CRITICAL: Handle Back Button / bfcache
+        // This ensures if the user navigates back, the loading screen isn't still visible.
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                // Page was loaded from cache (back button)
+                transitionScreen.classList.remove('active');
+                // Reset swipe handle position
+                handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                handle.style.transform = `translateX(0px)`;
+                swipeText.style.opacity = 1;
+            }
+        });
 
         window.addEventListener('load', () => {
             lucide.createIcons();
@@ -686,7 +701,6 @@
             document.querySelectorAll('.quick-connect').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const url = btn.getAttribute('data-url');
-                    // Removed loading animation for quick contacts
                     triggerNavigation(url, false);
                 });
             });
@@ -754,7 +768,7 @@
             
             if (matrix.m41 >= maxDelta * 0.9) {
                 handle.style.transform = `translateX(${maxDelta}px)`;
-                triggerNavigation(EXTERNAL_URL, true); // Keep loading for main swipe action
+                triggerNavigation(EXTERNAL_URL, true); 
             } else {
                 handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                 handle.style.transform = `translateX(0px)`;
