@@ -48,6 +48,13 @@
             --swipe-text: #52525b;
             --modal-bg: #ffffff;
             --footer-bg: rgba(0, 0, 0, 0.02);
+            --status-green-bg: #dcfce7;
+            --status-green-text: #15803d;
+            --status-amber-bg: #fef3c7;
+            --status-amber-text: #b45309;
+            --status-red-bg: #fee2e2;
+            --status-red-text: #b91c1c;
+            --status-glow: rgba(0,0,0,0);
         }
 
         .dark {
@@ -66,7 +73,18 @@
             --swipe-text: #a1a1aa;
             --modal-bg: #18181b;
             --footer-bg: rgba(255, 255, 255, 0.03);
+            --status-green-bg: #064e3b;
+            --status-green-text: #34d399;
+            --status-amber-bg: #78350f;
+            --status-amber-text: #fbbf24;
+            --status-red-bg: #7f1d1d;
+            --status-red-text: #f87171;
         }
+
+        /* Dynamic Status Colors for Glow */
+        .status-green { --status-glow: rgba(21, 128, 61, 0.4); }
+        .status-amber { --status-glow: rgba(180, 83, 9, 0.4); }
+        .status-red { --status-glow: rgba(185, 28, 28, 0.4); }
         
         body { 
             font-family: 'Inter', sans-serif; 
@@ -147,25 +165,73 @@
             overflow: hidden;
         }
 
-        /* --- Live Traffic Light Styles --- */
-        .live-indicator { 
-            width: 10px; height: 10px; border-radius: 50%; 
-            opacity: 0.15; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            border: 1px solid transparent;
         }
-        .active-light { opacity: 1 !important; transform: scale(1.1); }
-        .active-green { box-shadow: 0 0 15px #10b981; }
-        .active-amber { box-shadow: 0 0 15px #f59e0b; }
-        .active-red { box-shadow: 0 0 15px #f43f5e; }
+        .status-pill.visible { opacity: 1; }
+        
+        .status-pill.green { 
+            background: rgba(220, 252, 231, 0.5); 
+            color: var(--status-green-text); 
+            border-color: rgba(21, 128, 61, 0.2);
+        }
+        .status-pill.amber { 
+            background: rgba(254, 243, 199, 0.5); 
+            color: var(--status-amber-text); 
+            border-color: rgba(180, 83, 9, 0.2);
+        }
+        .status-pill.red { 
+            background: rgba(254, 226, 226, 0.5); 
+            color: var(--status-red-text); 
+            border-color: rgba(185, 28, 28, 0.2);
+        }
 
+        .dark .status-pill.green { background: rgba(6, 78, 59, 0.3); border-color: rgba(52, 211, 153, 0.2); }
+        .dark .status-pill.amber { background: rgba(120, 53, 15, 0.3); border-color: rgba(251, 191, 36, 0.2); }
+        .dark .status-pill.red { background: rgba(127, 29, 29, 0.3); border-color: rgba(248, 113, 113, 0.2); }
+        
+        .status-dot { 
+            width: 6px; 
+            height: 6px; 
+            border-radius: 50%; 
+            background: currentColor; 
+        }
+        .status-dot.pulse { animation: status-glow 2s infinite ease-in-out; }
+        @keyframes status-glow { 
+            0% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 currentColor; } 
+            50% { opacity: 0.6; transform: scale(1.1); box-shadow: 0 0 6px 1px currentColor; } 
+            100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 currentColor; } 
+        }
+
+        /* --- Refined Status Glow Ring --- */
         .avatar-ring { 
             position: relative; 
             padding: 8px; 
             background: var(--ring-bg); 
             border-radius: 50%; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-bottom: 20px; 
             perspective: 1000px;
+            transition: box-shadow 0.8s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 0 0 2px var(--status-glow);
+            animation: ring-pulse 3s infinite ease-in-out;
         }
+
+        @keyframes ring-pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 0 0 1px var(--status-glow); }
+            50% { box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 0 20px 4px var(--status-glow); }
+        }
+
         .avatar-flipper { width: 130px; height: 130px; position: relative; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .avatar-flipper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; position: absolute; backface-visibility: hidden; border: 4px solid var(--ring-bg); }
 
@@ -337,7 +403,7 @@
         .text-sub { color: var(--text-sub); }
     </style>
 </head>
-<body>
+<body id="app-body">
 
     <!-- Splash Screen -->
     <div id="splash-screen">
@@ -362,7 +428,7 @@
         </div>
     </div>
 
-    <!-- Transition Screen (Loading Overlay) -->
+    <!-- Transition Screen -->
     <div id="transition-screen">
         <div class="flex flex-col items-center">
             <div class="line-loader-container">
@@ -403,7 +469,6 @@
             </div>
             
             <div class="testimonial-slider" id="testimonial-slider">
-                <!-- Testimonials -->
                 <div class="testimonial-card">
                     <div class="mb-3">
                         <span class="text-[8px] font-black uppercase tracking-widest text-[#808a5c] block mb-1">Top Achievement:</span>
@@ -531,19 +596,14 @@
     <div class="card-perspective">
         <div id="main-card" class="card-container opacity-0 translate-y-12 transition-all duration-1000 ease-out">
             
-            <!-- Live Status Bar Integrated -->
-            <div class="w-full flex justify-between items-center mb-6 px-1">
-                <div class="flex gap-1.5 bg-black/5 dark:bg-white/5 p-1.5 rounded-full border border-black/5 dark:border-white/5">
-                    <div id="light-red" class="live-indicator bg-rose-500"></div>
-                    <div id="light-amber" class="live-indicator bg-amber-500"></div>
-                    <div id="light-green" class="live-indicator bg-emerald-500"></div>
-                </div>
-                <div class="flex items-center gap-2 overflow-hidden">
-                    <span id="status-text" class="text-[8px] font-black uppercase tracking-[0.2em] text-muted italic truncate max-w-[150px]">Syncing...</span>
+            <div class="w-full flex justify-center mb-6 px-1">
+                <div id="status-badge" class="status-pill">
+                    <div class="status-dot pulse"></div>
+                    <span id="status-text">Syncing...</span>
                 </div>
             </div>
 
-            <div class="avatar-ring">
+            <div class="avatar-ring" id="avatar-ring">
                 <div class="avatar-flipper" id="avatar-flipper">
                     <img id="avatar-front" src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/CRC-Logo.png" alt="Logo Front">
                     <img id="avatar-back" src="https://raw.githubusercontent.com/CoachChrisCRC/linkscard/refs/heads/main/UNCNVNTNL-Logo.png" alt="Logo Back" style="transform: rotateY(180deg);">
@@ -630,7 +690,6 @@
             "https://raw.githubusercontent.com/CoachChrisCRC/app/df3580c5a17d646dc6813a283f7e85e269fece8e/CoachChrisCRC-AppIcon.png"
         ];
 
-        // --- Live Status Remote Logic ---
         async function updateLiveStatus() {
             try {
                 const response = await fetch(SHEET_URL + '&cache=' + Date.now());
@@ -652,18 +711,17 @@
         }
 
         function applyStatus(msg, color) {
+            const badge = document.getElementById('status-badge');
             const textEl = document.getElementById('status-text');
-            textEl.innerText = msg;
+            const body = document.getElementById('app-body');
             
-            const colors = ['red', 'amber', 'green'];
-            colors.forEach(c => {
-                const light = document.getElementById(`light-${c}`);
-                light.classList.remove('active-light', 'active-red', 'active-amber', 'active-green');
-                
-                if (c === color) {
-                    light.classList.add('active-light', `active-${c}`);
-                }
-            });
+            textEl.innerText = msg;
+            badge.classList.remove('green', 'amber', 'red');
+            badge.classList.add(color, 'visible');
+
+            // Apply global CSS variable mapping for the glow ring
+            body.classList.remove('status-green', 'status-amber', 'status-red');
+            body.classList.add(`status-${color}`);
         }
 
         const splash = document.getElementById('splash-screen');
