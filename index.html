@@ -321,8 +321,41 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid var(--olive);
+            position: relative;
         }
         .fab:active { transform: scale(0.9); }
+
+        /* Install Notification FAB Styling */
+        #fab-install {
+            background: var(--olive);
+            color: white;
+            border-color: white;
+            animation: bounce-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #fab-install i { transform: scale(1); }
+        
+        .dismiss-x {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: var(--text-main);
+            color: var(--ring-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
 
         .footer-connect {
             width: calc(100% + 48px);
@@ -601,8 +634,12 @@
             <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
             <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
         </div>
-        <div class="fab hidden" id="fab-save" title="Install App">
+        <!-- Floating Install Button -->
+        <div class="fab hidden" id="fab-install" title="Install App">
             <i data-lucide="download" class="w-5 h-5"></i>
+            <div id="dismiss-install" class="dismiss-x" title="Dismiss">
+                <i data-lucide="x" class="w-2.5 h-2.5"></i>
+            </div>
         </div>
     </div>
 
@@ -772,9 +809,40 @@
         const swipeText = document.getElementById('swipe-text');
         const flipper = document.getElementById('avatar-flipper');
         const frontImg = document.getElementById('avatar-front');
-        const fabSave = document.getElementById('fab-save');
+        const fabInstall = document.getElementById('fab-install');
+        const dismissInstall = document.getElementById('dismiss-install');
         const themeToggle = document.getElementById('theme-toggle');
         const slider = document.getElementById('testimonial-slider');
+
+        // PWA Install Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Only show install fab if user hasn't dismissed it in this session
+            if (!sessionStorage.getItem('installDismissed')) {
+                fabInstall.classList.remove('hidden');
+            }
+        });
+
+        fabInstall.addEventListener('click', async (e) => {
+            if (e.target.closest('#dismiss-install')) return; // Ignore if X was clicked
+            
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    fabInstall.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        dismissInstall.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fabInstall.classList.add('hidden');
+            sessionStorage.setItem('installDismissed', 'true');
+        });
 
         function setTheme(isDark) {
             if (isDark) {
@@ -817,7 +885,6 @@
         function triggerNavigation(url, withLoading = true) {
             if (withLoading) {
                 transitionScreen.classList.add('active');
-                // Use setTimeout to ensure the browser has a chance to render the transition
                 setTimeout(() => {
                     window.location.href = url;
                 }, 100);
@@ -826,10 +893,8 @@
             }
         }
 
-        // Fix for "stuck on loading screen" when navigating back
         window.onpageshow = function(event) {
             if (event.persisted) {
-                // If loaded from back-forward cache, reset UI
                 transitionScreen.classList.remove('active');
                 handle.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                 handle.style.transform = `translateX(0px)`;
