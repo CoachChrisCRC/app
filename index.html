@@ -480,6 +480,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.2em;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -779,8 +780,12 @@
     <script>
         const EXTERNAL_URL = "https://coachchriscrc.carrd.co";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXLZhY6w7aWwg5ZjFGoh7T-0xx3WownV46HBKC1iMNqxiOAW8LfbcfqnoXo8YznaaerjeG1_R6vb7c/pub?gid=0&single=true&output=csv";
-        // Points to the direct edit interface of the sheet
-        const HIDDEN_MENU_URL = "https://docs.google.com/spreadsheets/d/1Z0_Tu60EA5kuibQ_3hnAUem2fwT843afJvQ0FICxYKs/edit";
+        
+        // Deep-link to the Sheets app using 'googlesheets://' protocol
+        // Fallback to web version if app isn't installed
+        const HIDDEN_MENU_URL = "googlesheets://docs.google.com/spreadsheets/d/1Z0_Tu60EA5kuibQ_3hnAUem2fwT843afJvQ0FICxYKs";
+        const HIDDEN_MENU_FALLBACK_URL = "https://docs.google.com/spreadsheets/d/1Z0_Tu60EA5kuibQ_3hnAUem2fwT843afJvQ0FICxYKs/edit";
+        
         const SECRET_PIN = "07320";
 
         const CONTACT_INFO = {
@@ -883,7 +888,7 @@
         const themeToggle = document.getElementById('theme-toggle');
         const slider = document.getElementById('testimonial-slider');
 
-        // Hidden Menu Logic
+        // Hidden Menu Logic (Long press 3s on avatar)
         let longPressTimer;
         const avatarTouchStart = (e) => {
             longPressTimer = setTimeout(() => {
@@ -906,8 +911,17 @@
                 if (val === SECRET_PIN) {
                     pinModal.classList.remove('active');
                     pinInput.value = '';
-                    hiddenIframe.src = HIDDEN_MENU_URL;
-                    hiddenContainer.classList.add('active');
+                    
+                    // Attempt to open the App directly
+                    window.location.href = HIDDEN_MENU_URL;
+                    
+                    // Fallback to web view if the app doesn't open within a second
+                    setTimeout(() => {
+                        if (document.visibilityState === 'visible') {
+                            hiddenIframe.src = HIDDEN_MENU_FALLBACK_URL;
+                            hiddenContainer.classList.add('active');
+                        }
+                    }, 1000);
                 } else {
                     pinError.style.opacity = '1';
                     setTimeout(() => {
@@ -926,8 +940,7 @@
         closeIframeBtn.addEventListener('click', () => {
             hiddenContainer.classList.remove('active');
             hiddenIframe.src = 'about:blank';
-            // Sync status again after closing editor to see immediate changes
-            updateLiveStatus();
+            updateLiveStatus(); // Refresh status badge immediately
         });
 
         // PWA Install
