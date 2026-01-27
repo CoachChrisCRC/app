@@ -683,7 +683,7 @@
 
             <h2 class="rock-salt font-bold text-2xl text-main uppercase tracking-tight mb-3">COACH CHRIS</h2>
             <h3 class="text-main font-black text-2xl uppercase tracking-tighter mb-1">Chris Hedley</h3>
-            <p class="text-muted text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Online Coach & PT</p>
+            <p class="text-muted text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Specialist in High-Performance Strength & Functional Longevity</p>
             
             <div class="flex flex-col gap-1 text-[10px] font-black uppercase tracking-[0.2em] text-sub mb-8 italic">
                 <span>Circular Roots Coaching</span>
@@ -691,23 +691,36 @@
             </div>
 
             <div class="flex flex-col w-full gap-4">
-                <div class="grid grid-cols-2 gap-3 w-full">
-                    <button id="open-qr" class="flex items-center justify-center gap-2 bg-[#808a5c] text-white py-4 rounded-2xl shadow-md active:scale-[0.96] active:bg-[#6d764e] transition-all">
-                        <i data-lucide="qr-code" class="w-4 h-4"></i>
-                        <span class="text-[9px] font-black uppercase tracking-widest">Share Card</span>
+                <div class="flex flex-col gap-3 w-full">
+                    <!-- High-Ticket Primary Action -->
+                    <button id="apply-coaching" class="w-full flex items-center justify-center gap-3 bg-[#808a5c] text-white py-5 rounded-2xl shadow-lg shadow-[#808a5c]/20 active:scale-[0.96] active:bg-[#6d764e] transition-all">
+                        <i data-lucide="calendar-check" class="w-5 h-5"></i>
+                        <span class="text-[11px] font-black uppercase tracking-widest">Apply for 1-1 Online Coaching</span>
                     </button>
-                    <button id="save-vcard" class="flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 py-4 rounded-2xl shadow-sm active:scale-[0.96] transition-all">
-                        <i data-lucide="user-plus" class="w-4 h-4"></i>
-                        <span class="text-[9px] font-black uppercase tracking-widest">Save Contact</span>
-                    </button>
-                    <button id="open-testimonials" class="col-span-2 flex items-center justify-center gap-2 bg-white/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 active:scale-[0.96] transition-all">
-                        <i data-lucide="star" class="w-4 h-4 text-[#808a5c]"></i>
-                        <span class="text-[9px] font-black uppercase tracking-widest">Success Stories</span>
-                    </button>
-                    <button id="open-course" class="col-span-2 flex items-center justify-center gap-2 bg-white/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border-2 border-[#808a5c] active:scale-[0.96] transition-all">
-                        <i data-lucide="flame" class="w-4 h-4 text-[#808a5c]"></i>
-                        <span class="text-[9px] font-black uppercase tracking-widest">Get my Free 14 Day Fundamentals Course</span>
-                    </button>
+
+                    <!-- Trust and Results Grid -->
+                    <div class="grid grid-cols-2 gap-3 w-full">
+                        <button id="open-testimonials" class="flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 py-4 rounded-2xl shadow-sm active:scale-[0.96] transition-all">
+                            <i data-lucide="award" class="w-4 h-4 text-[#808a5c]"></i>
+                            <span class="text-[9px] font-black uppercase tracking-widest">Success Stories</span>
+                        </button>
+                        <button id="open-qr" class="flex items-center justify-center gap-2 bg-white/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 active:scale-[0.96] transition-all">
+                            <i data-lucide="qr-code" class="w-4 h-4"></i>
+                            <span class="text-[9px] font-black uppercase tracking-widest">Share Card</span>
+                        </button>
+                    </div>
+
+                    <!-- Nurture and Contact Actions -->
+                    <div class="grid grid-cols-2 gap-3 w-full">
+                        <button id="open-course" class="flex items-center justify-center gap-2 bg-white/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border-2 border-[#808a5c] active:scale-[0.96] transition-all">
+                            <i data-lucide="flame" class="w-4 h-4 text-[#808a5c]"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest leading-none">Free 14 Day Course</span>
+                        </button>
+                        <button id="save-vcard" class="flex items-center justify-center gap-2 bg-white/50 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 active:scale-[0.96] transition-all">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            <span class="text-[9px] font-black uppercase tracking-widest">Save Contact</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="swipe-track">
@@ -834,6 +847,7 @@
         const openQrBtn = document.getElementById('open-qr');
         const openTestimonialsBtn = document.getElementById('open-testimonials');
         const openCourseBtn = document.getElementById('open-course');
+        const applyCoachingBtn = document.getElementById('apply-coaching');
         const saveVcardBtn = document.getElementById('save-vcard');
         const closeQrBtn = document.getElementById('close-qr');
         const closeTestimonialsBtn = document.getElementById('close-testimonials');
@@ -1033,6 +1047,7 @@
         openTestimonialsBtn.addEventListener('click', () => testimonialsModal.classList.add('active'));
         closeTestimonialsBtn.addEventListener('click', () => testimonialsModal.classList.remove('active'));
         openCourseBtn.addEventListener('click', () => triggerNavigation(EXTERNAL_URL, true));
+        applyCoachingBtn.addEventListener('click', () => triggerNavigation(EXTERNAL_URL, true));
 
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href, width: 240, height: 240, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
